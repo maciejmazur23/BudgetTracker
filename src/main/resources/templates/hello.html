@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/save.css"/>
+<!--    <script type="text/javascript" src="/static/js/custom.js"/>-->
+</head>
+<body>
+<div style="background-color: lightgrey; padding-left: 45%; margin-top: 10%; font-size: 40px; ">
+    Transactions
+    <!--    <p th:text="${name}"></p>-->
+</div>
+<div style="margin: auto">
+    <p>
+        <label for="start">Transaction date:
+            <input class="input" type="date" id="start" name="trip-start"
+                   value="2023-01-01"
+                   min="2020-01-01" max="2025-12-31"
+                   onkeyup="makeDisable()"/>
+        </label>
+    </p>
+    <p>
+    <form action="">
+        <label>
+            Operation:
+            <input class="input" list="operation" placeholder="income" onkeyup="makeDisable()"/>
+        </label>
+        <datalist id="operation">
+            <option value="INCOME"></option>
+            <option value="COST"></option>
+        </datalist>
+    </form>
+    </p>
+    <p>
+    <form action="">
+        <label>
+            Cost:
+            <input class="input" list="costs" placeholder="food" onkeyup="makeDisable()"/>
+        </label>
+        <datalist id="costs">
+            <option value="SPORT"></option>
+            <option value="FOOD"></option>
+            <option value="ENTERTAINMENT"></option>
+            <option value="SHOPPING"></option>
+            <option value="TRANSPORT"></option>
+            <option value="HOUSE"></option>
+            <option value="OTHER"></option>
+        </datalist>
+    </form>
+    </p>
+    <p>
+        Price:
+        <input class="input" type="number" placeholder="4.99" step="0.01" min="0" max="1000000.00" onkeyup="makeDisable()"/>
+    </p>
+    <p>
+        <label>
+            Description:
+            <input class="input" id="description" type="text" placeholder="..." onkeyup="makeDisable()">
+        </label>
+    </p>
+    <p>
+        <input class="button" id="save" type="submit" value="Save" disabled/>
+        <script type="text/javascript">
+            function makeDisable(){
+                for (const elementsByClassNameElement of document.getElementsByClassName("input")) {
+                    if (!elementsByClassNameElement.value.length){
+                        document.getElementById("save").disabled = true;
+                        return;
+                    }
+                }
+                document.getElementById("save").disabled = false;
+            }
+        </script>
+    </p>
+</div>
+</body>
+</html>
