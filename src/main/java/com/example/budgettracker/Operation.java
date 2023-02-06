@@ -1,12 +1,20 @@
 package com.example.budgettracker;
 
+import com.example.budgettracker.model.CATEGORY;
+import com.example.budgettracker.model.OPERATION;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity(name = "purchases")
+@ToString
+@Setter
+@Getter
+@Entity(name = "operations")
 public class Operation {
 
     @Id
@@ -17,10 +25,10 @@ public class Operation {
     private LocalDate date;
 
     @NonNull
-    private OPERATION operation;
+    private String operation;
 
     @NonNull
-    private CATEGORY category;
+    private String category;
 
     @NonNull
     private BigDecimal price;
@@ -31,13 +39,5 @@ public class Operation {
     @NonNull
     @ManyToOne
     private User user;
-
-    enum OPERATION {
-        INCOME, COST;
-    }
-
-    enum CATEGORY {
-        SPORT, ROZRYWKA, INWESTYCJE, TRANSPORT, JEDZENIE, ZAKUPY, MIESZKANIE, PREZENTY, PRZYCHODY, INNE;
-    }
 
 }
