@@ -1,5 +1,6 @@
-package com.example.budgettracker;
+package com.example.budgettracker.configuration;
 
+import com.example.budgettracker.repositories.UserRepo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,14 +29,31 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    public void start(){
+        com.example.budgettracker.entities.User user = new com.example.budgettracker.entities.User();
+        user.setEmail("user@wp.pl");
+        user.setPassword(getBcryptPasswordEncoder().encode("user123"));
+        user.setRole("USER");
+        try {
+            userRepo.save(user);
+        }catch (Exception e){
+            System.out.println("User already exist");
+        }
+    }
+
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails userDetails = User.withUsername("user@wp.pl")
-                .password(getBcryptPasswordEncoder().encode("user123"))
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
+        start();
+        List<com.example.budgettracker.entities.User> users = userRepo.findAll();
+        System.out.println(users);
+        List<UserDetails> detailsList = users.stream()
+                .map(user -> User.withUsername(user.getEmail())
+                        .password(user.getPassword())
+                        .roles(user.getRole())
+                        .build()
+                ).toList();
+        System.out.println(detailsList);
+        return new InMemoryUserDetailsManager(detailsList);
     }
 
     @Bean

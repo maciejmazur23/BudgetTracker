@@ -1,9 +1,6 @@
-package com.example.budgettracker;
+package com.example.budgettracker.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.lang.NonNull;
@@ -18,10 +15,14 @@ public class User {
     private Long id;
 
     @NonNull
+    @Column(unique = true)
     private String email;
 
     @NonNull
     private String password;
+
+    @NonNull
+    private String role;
 
     public User() {
     }

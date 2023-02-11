@@ -1,4 +1,4 @@
-package com.example.budgettracker;
+package com.example.budgettracker.entities;
 
 import com.example.budgettracker.model.CATEGORY;
 import com.example.budgettracker.model.OPERATION;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity(name = "operations")
-public class Operation {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +25,10 @@ public class Operation {
     private LocalDate date;
 
     @NonNull
-    private String operation;
+    private OPERATION operation;
 
     @NonNull
-    private String category;
+    private CATEGORY category;
 
     @NonNull
     private BigDecimal price;
@@ -37,7 +37,5 @@ public class Operation {
     private String description;
 
     @NonNull
-    @ManyToOne
-    private User user;
-
+    private Long userId;
 }
