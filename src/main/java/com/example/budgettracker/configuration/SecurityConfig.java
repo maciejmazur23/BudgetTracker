@@ -62,7 +62,7 @@ public class SecurityConfig {
                         (request) -> request.requestMatchers("/**").authenticated()
                 )
                 .formLogin()
-                .defaultSuccessUrl("/operations", true);
+                .defaultSuccessUrl("/user/menu", true);
 
         return http.build();
     }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <title>Menu</title>
+    <style>
+        body{
+            background-color: #f7f7f7;
+        }
+        #container {
+            width: 80%;
+            margin-left: 10%;
+            margin-right: 10%;
+            margin-top: 5%;
+            height: 500px;
+            display: flex;
+            justify-content: center;
+        }
+        .btn{
+            margin-top: 10%;
+            margin-bottom: 10%;
+            font-size: 40px;
+            border-radius: 20px;
+        }
+        .button-group{
+            margin: 5%;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="button-group">
+        <a href="/user/transactions" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Add transaction</a>
+        <a href="/user/summary" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Summary</a>
+    </div>
+</div>
+</body>
+</html>
