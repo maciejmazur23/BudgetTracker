@@ -28,11 +28,11 @@ public class SummaryServiceImpl implements SummaryService {
     }
 
     private void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<Transaction> transactions) {
-        Map<Integer, List<Transaction>> collectByMonth = transactions.stream()
+        Map<Integer, List<Transaction>> collectByYear = transactions.stream()
                 .collect(Collectors.groupingBy(transaction -> transaction.getDate().getYear()));
 
-        for (Integer year : collectByMonth.keySet()) {
-            List<Transaction> yearTransactions = collectByMonth.get(year);
+        for (Integer year : collectByYear.keySet()) {
+            List<Transaction> yearTransactions = collectByYear.get(year);
             yearSummaries.add(getYearSummary(year, yearTransactions));
 
             Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(getMonthSummary(year, month,
@@ -42,7 +42,7 @@ public class SummaryServiceImpl implements SummaryService {
         }
 
         Comparator<Summary> yearComparator = Comparator.comparing(Summary::getYear);
-        Comparator<Summary> monthComparator = Comparator.comparing(Summary::getMonth);
+        Comparator<Summary> monthComparator = yearComparator.thenComparing(Summary::getMonth);
         setPreviousBalance(yearSummaries, yearComparator);
         setPreviousBalance(monthSummaries, monthComparator);
     }
@@ -52,12 +52,13 @@ public class SummaryServiceImpl implements SummaryService {
                 .sorted(comparator)
                 .toList();
         sortedSummaryList.get(0).setPreviousBalance(BigDecimal.ZERO);
-        BigDecimal previousBalance = sortedSummaryList.get(0).getCurrentBalance();
+        BigDecimal previousBalance = BigDecimal.ZERO;
         int i = 0;
         for (Summary summary : sortedSummaryList) {
             if (i != 0) summary.setPreviousBalance(previousBalance);
             i++;
-            previousBalance = summary.getCurrentBalance();
+            previousBalance = summary.getCurrentBalance()
+                    .add(summary.getPreviousBalance());
         }
     }
 

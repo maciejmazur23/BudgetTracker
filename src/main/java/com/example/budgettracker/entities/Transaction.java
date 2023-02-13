@@ -1,7 +1,7 @@
 package com.example.budgettracker.entities;
 
-import com.example.budgettracker.model.CATEGORY;
-import com.example.budgettracker.model.OPERATION;
+import com.example.budgettracker.model.enums.CATEGORY;
+import com.example.budgettracker.model.enums.OPERATION;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

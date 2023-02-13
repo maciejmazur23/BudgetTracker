@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Summary</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f7f7f7;
+        }
+
+        #container {
+            width: 94%;
+            margin-left: 3%;
+            background-color: lightgrey;
+        }
+
+        #header {
+            font-size: 30px;
+            color: darkblue;
+            font-weight: bolder;
+            /*padding:1%;*/
+            text-align: center;
+            border: 3px solid black;
+        }
+
+        .month-table {
+            border: 3px solid black;
+            width: 45%;
+        }
+
+        .chart {
+            border: 3px solid black;
+            width: 45%;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <label>Summary</label>
+    </div>
+    <div class="choice">
+        <form id="myForm" th:action="@{'/user/summary'}" th:object="${chosenYear}" method="get">
+            <select class="form-control selectpicker" id="year" th:field="*{year}" onchange="send()">
+                <option value="0">year</option>
+                <option id="choiceYear" th:each="year : ${years}"
+                        th:value="${year}"
+                        th:text="${year}"
+                >
+                </option>
+            </select>
+        </form>
+        <script>
+            function send() {
+                let year = document.getElementById('year').value;
+                console.log(year);
+                document.getElementById('myForm').submit();
+            }
+        </script>
+    </div>
+    <div class="month-table">
+        <table class="table table-sm">
+            <thead class="thead-dark">
+            <tr>
+                <th>YEAR</th>
+                <th>MONTH</th>
+                <th>PREVIOUS_BALANCE</th>
+                <th>INCOMES</th>
+                <th>COSTS</th>
+                <th>CURRENT_BALANCE</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="summary : ${list}">
+                <td th:text="${summary.getYear()}">1</td>
+                <td th:text="${summary.getMonth}">Text ...</td>
+                <td th:text="${summary.getPreviousBalance()}">Text ...</td>
+                <td th:text="${summary.getIncomes()}">Text ...</td>
+                <td th:text="${summary.getCosts()}">Text ...</td>
+                <td th:text="${summary.getCurrentBalance()}">Text ...</td>
+            </tr>
+            </td>
+            </tbody>
+        </table>
+    </div>
+    <div class="chart">
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+</body>
+</html>
