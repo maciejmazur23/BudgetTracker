@@ -1,7 +1,4 @@
-package com.example.budgettracker.model;
-
-import java.util.Arrays;
-import java.util.List;
+package com.example.budgettracker.model.enums;
 
 public enum OPERATION {
     INCOME("INCOME"), COST("COST");
