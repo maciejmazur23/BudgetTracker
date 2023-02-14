@@ -1,11 +1,13 @@
-package com.example.budgettracker;
+package com.example.budgettracker.controllers;
 
 import com.example.budgettracker.entities.Transaction;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
-import com.example.budgettracker.service.SummaryService;
+import com.example.budgettracker.model.Year;
+import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.repositories.TransactionRepo;
 import com.example.budgettracker.repositories.UserRepo;
+import com.example.budgettracker.service.SummaryService;
 import com.example.budgettracker.service.SummaryServiceImpl;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
@@ -16,9 +18,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class TrackerApi {
@@ -76,19 +79,44 @@ public class TrackerApi {
         List<Integer> years = summaries.yearSummaries().stream()
                 .map(Summary::getYear)
                 .toList();
+        Map<CATEGORY, BigDecimal> categoryMap = new HashMap<>();
+        categoryMap.put(CATEGORY.SPORT, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.ENTERTAINMENT, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.FOOD, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.HOUSE, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.OTHER, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.SHOPPING, BigDecimal.ZERO);
+        categoryMap.put(CATEGORY.TRANSPORT, BigDecimal.ZERO);
 
-        model.addAttribute("list", summariesList);
+        summariesList.forEach(summary -> {
+            Map<CATEGORY, BigDecimal> categoryCosts = summary.getCategoryCosts();
+            categoryCosts.forEach(
+                    (key, value) -> categoryMap.replace(key, categoryMap.get(key).add(value)));
+        });
+        Set<CATEGORY> keySet = categoryMap.keySet();
+        Collection<BigDecimal> values = categoryMap.values();
+
         model.addAttribute("years", years);
+        model.addAttribute("list", summariesList);
+        model.addAttribute("x", keySet);
+        model.addAttribute("y", values);
         model.addAttribute("chosenYear", new Year());
 
         return "summary-page";
     }
 
     @GetMapping("/user/summary")
-    public String postYear(@ModelAttribute Year year){
+    public String postYear(@ModelAttribute Year year) {
         int intYear = year.getYear();
         if (year.getYear() == 0) intYear = LocalDate.now().getYear();
 
-        return "redirect:/user/summary/"+intYear;
+        return "redirect:/user/summary/" + intYear;
+    }
+
+    @GetMapping("/user/summary/chart")
+    public String getChart(Model model) {
+//        model.addAttribute("x", x);
+//        model.addAttribute("y", y);
+        return "circle-chart";
     }
 }

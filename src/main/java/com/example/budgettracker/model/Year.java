@@ -1,4 +1,4 @@
-package com.example.budgettracker;
+package com.example.budgettracker.model;
 
 import lombok.Getter;
 import lombok.Setter;

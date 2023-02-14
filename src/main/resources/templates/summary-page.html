@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Summary</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <style>
         body {
             background-color: #f7f7f7;
@@ -14,16 +17,18 @@
         #container {
             width: 94%;
             margin-left: 3%;
-            background-color: lightgrey;
         }
 
         #header {
             font-size: 30px;
-            color: darkblue;
             font-weight: bolder;
-            /*padding:1%;*/
             text-align: center;
-            border: 3px solid black;
+        }
+
+        .choice {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1%;
         }
 
         .month-table {
@@ -31,7 +36,7 @@
             width: 45%;
         }
 
-        .chart {
+        .col {
             border: 3px solid black;
             width: 45%;
         }
@@ -55,38 +60,80 @@
         </form>
         <script>
             function send() {
-                let year = document.getElementById('year').value;
-                console.log(year);
                 document.getElementById('myForm').submit();
             }
         </script>
     </div>
-    <div class="month-table">
-        <table class="table table-sm">
-            <thead class="thead-dark">
-            <tr>
-                <th>YEAR</th>
-                <th>MONTH</th>
-                <th>PREVIOUS_BALANCE</th>
-                <th>INCOMES</th>
-                <th>COSTS</th>
-                <th>CURRENT_BALANCE</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="summary : ${list}">
-                <td th:text="${summary.getYear()}">1</td>
-                <td th:text="${summary.getMonth}">Text ...</td>
-                <td th:text="${summary.getPreviousBalance()}">Text ...</td>
-                <td th:text="${summary.getIncomes()}">Text ...</td>
-                <td th:text="${summary.getCosts()}">Text ...</td>
-                <td th:text="${summary.getCurrentBalance()}">Text ...</td>
-            </tr>
-            </td>
-            </tbody>
-        </table>
-    </div>
-    <div class="chart">
+    <div class="row">
+        <div class="col">
+            <table class="table table-sm">
+                <thead class="thead-dark">
+                <tr>
+                    <th>YEAR</th>
+                    <th>MONTH</th>
+                    <th>PREVIOUS_BALANCE</th>
+                    <th>INCOMES</th>
+                    <th>COSTS</th>
+                    <th>CURRENT_BALANCE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="summary : ${list}">
+                    <td th:text="${summary.getYear()}">1</td>
+                    <td th:text="${summary.getMonth}">Text ...</td>
+                    <td th:text="${summary.getPreviousBalance()}">Text ...</td>
+                    <td th:text="${summary.getIncomes()}">Text ...</td>
+                    <td th:text="${summary.getCosts()}">Text ...</td>
+                    <td th:text="${summary.getCurrentBalance()}">Text ...</td>
+                </tr>
+                </td>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <canvas id="summaryChart"></canvas>
+            <script th:inline="javascript">
+                let x = [[${x}]];
+                let y = [[${y}]];
+            </script>
+            <script>
+                let xValues = x;
+                let yValues = y;
+                new Chart("summaryChart", {
+                    type: 'bar',
+                    data: {
+                        datasets: [
+                            {
+                                data: yValues,
+                                backgroundColor: [
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 159, 64)',
+                                    'rgb(255, 205, 86)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(75, 162, 235)',
+                                    'rgb(54, 64, 235)',
+                                    'rgb(54, 162, 235)',
+                                ],
+                            },
+                        ],
+                        labels: xValues,
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: "Costs"
+                        },
+                        plugins: {
+                            datalabels: {
+                                formatter: (value) => {
+                                    if (value > 0) return value;
+                                },
+                            },
+                        },
+                    },
+                });
+            </script>
+        </div>
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
