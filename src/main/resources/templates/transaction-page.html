@@ -1,67 +1,73 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Transactions</title>
-    <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
     <style>
-        body{
+        body {
             background-color: #f7f7f7;
         }
+
         #container {
             width: 80%;
             margin-left: 10%;
         }
-        #header{
-            background-color: darkblue;
-            font-size: 40px;
-            font-weight: bolder;
-            padding:1%;
-            text-align: center;
+
+        #header {
+            background-color:black;
             color: wheat;
+            font-weight: bolder;
+            padding: 1%;
+            font-size: 40px;
+            opacity: 85%;
         }
-        .add-panel{
+
+        #menu-link {
+            font-size: 20px;
+            width: 10%;
+            margin-left: 5%;
+        }
+
+        .link {
+            color: inherit;
+        }
+
+        .link:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        .add-panel {
             padding: 10px;
             border: 3px solid black;
             border-radius: 10px;
+            margin-top: 5%;
+            margin-bottom: 5%;
         }
+
         #send {
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
+        #transactions {
+            margin-bottom: 5%;
+        }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Transactions</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body>
+<div id="header">
+    <div id="menu-link" class="d-inline">
+        <a href="/user" class="link">Budget Tracker</a>
+    </div>
+    <label style="margin-left: 1%;">Transactions</label>
+</div>
 <div id="container">
-    <div id="header"
-         th:object="${newTransaction}">
-        <label>Transactions</label>
-    </div>
-    <div>
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th>DATE</th>
-                <th>OPERATION</th>
-                <th>CATEGORY</th>
-                <th>PRICE</th>
-                <th>DESCRIPTION</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="op : ${transactionList}">
-                <td th:text="${op.getDate()}">1</td>
-                <td th:text="${op.getOperation()}">Text ...</td>
-                <td th:text="${op.getCategory()}">Text ...</td>
-                <td th:text="${op.getPrice()}">Text ...</td>
-                <td th:text="${op.getDescription()}">Text ...</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
     <div class="add-panel">
         <form th:action="@{/user/add-transaction}" th:object="${newTransaction}" method="post">
             <div class="form-row">
@@ -69,11 +75,12 @@
                     <input class="form-control" type="date" id="start" name="trip-start"
                            min="2020-01-01" max="2025-12-31"
                            th:field="*{date}"
-                           onkeyup="makeDisable()"
+                           required
                     />
                 </div>
                 <div class="col">
-                    <select class="form-control custom-select" id="transactionList" th:field="*{operation}" required>
+                    <select class="form-control custom-select" id="transactionList" th:field="*{operation}"
+                            onchange="makeDisable()" required>
                         <option selected disabled value="">operation</option>
                         <option value="INCOME">INCOME</option>
                         <option value="COST">COST</option>
@@ -81,7 +88,7 @@
                     <div class="invalid-feedback">Example invalid custom select feedback</div>
                 </div>
                 <div class="col">
-                    <select class="form-control custom-select" id="categoryList" th:field="*{category}" required>
+                    <select class="form-control custom-select" id="categoryList" th:field="*{category}" disabled>
                         <option selected disabled value="">category</option>
                         <option value="SPORT">SPORT</option>
                         <option value="FOOD">FOOD</option>
@@ -97,38 +104,53 @@
                     <input class="form-control" id="price" type="number" placeholder="4.99" step="0.01" min="0"
                            max="1000000.00"
                            th:field="*{price}"
-                           onkeyup="makeDisable()"
+                           required
                     />
                 </div>
                 <div class="col">
-                    <input class="form-control" id="description" type="text" placeholder="description" th:field="*{description}"
-                           onkeyup="makeDisable()" required>
+                    <input class="form-control" id="description"
+                           type="text" placeholder="description"
+                           th:field="*{description}" required>
                 </div>
                 <div id="send" class="col">
-                    <input id="save" class="btn btn-primary" type="submit" value="Save" onclick="clearFields()"  disabled/>
+                    <input id="save" class="btn btn-primary" type="submit" value="Save"/>
                     <script type="text/javascript">
-                        function clearFields() {
-                        }
                         function makeDisable() {
-                            let list = document.getElementById('save').classList;
-                            for (const elementsByClassNameElement of document.getElementsByClassName("input")) {
-                                if (!elementsByClassNameElement.value.length) {
-                                    document.getElementById("save").disabled = true;
-                                    list.remove("button")
-                                    return;
-                                }
-                            }
-                            document.getElementById("save").disabled = false;
-                            list.add("button");
+                            let jsIdCategories = document.getElementById('categoryList');
+                            let jsIdTransactions = document.getElementById('transactionList');
+                            console.log(jsIdTransactions.value)
+                            jsIdCategories.disabled = jsIdTransactions.value === 'INCOME';
                         }
                     </script>
                 </div>
             </div>
         </form>
     </div>
+    <div id="transactions">
+        <table class="table table-hover">
+            <tbody>
+            <tr th:each="op : ${transactionList}">
+                <td th:text="${op.getDate()}">1</td>
+                <td th:text="${op.getOperation()}">Text ...</td>
+                <td th:text="${op.getCategory()}">Text ...</td>
+                <td th:text="${op.getPrice()}">Text ...</td>
+                <td th:text="${op.getDescription()}">Text ...</td>
+                <td>
+                    <a th:href="@{/user/delete-transaction/{id}(id=${op.getId()})}" class="btn btn-primary">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
 </body>
 </html>
