@@ -1,57 +1,81 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Summary</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-    <script type="text/javascript"
-            src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <style>
         body {
             background-color: #f7f7f7;
         }
 
         #container {
+            margin-top: 7%;
             width: 94%;
             margin-left: 3%;
         }
 
         #header {
-            font-size: 30px;
+            background-color: black;
+            color: wheat;
             font-weight: bolder;
-            text-align: center;
+            padding: 1%;
+            font-size: 40px;
+            margin-bottom: 1%;
+            opacity: 85%;
         }
-
+        #menu-link {
+            font-size: 20px;
+            width: 10%;
+            margin-left: 5%;
+        }
+        .link{
+            color: inherit;
+        }
+        .link:hover{
+            color: white;
+            text-decoration: none;
+        }
         .choice {
             display: flex;
             justify-content: center;
             margin-bottom: 1%;
         }
 
-        .month-table {
-            border: 3px solid black;
-            width: 45%;
+        .row {
+            border: 1px solid black;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            background-color: white;
         }
 
-        .col {
-            border: 3px solid black;
-            width: 45%;
+        #categoryCost {
+            height: 350px;
+        }
+
+        #balance {
+            height: 500px;
         }
     </style>
 </head>
 <body>
-<div id="container">
-    <div id="header">
-        <label>Summary</label>
+<div id="header" class="fixed-top">
+    <div id="menu-link" class="d-inline">
+        <a href="/user" class="link">Budget Tracker</a>
     </div>
+    <label style="margin-left: 1%;">Summary</label>
+</div>
+<div id="container">
     <div class="choice">
         <form id="myForm" th:action="@{'/user/summary'}" th:object="${chosenYear}" method="get">
             <select class="form-control selectpicker" id="year" th:field="*{year}" onchange="send()">
                 <option value="0">year</option>
-                <option id="choiceYear" th:each="year : ${years}"
+                <option value="1">All</option>
+                <option th:each="year : ${years}"
                         th:value="${year}"
                         th:text="${year}"
                 >
@@ -64,10 +88,10 @@
             }
         </script>
     </div>
-    <div class="row">
+    <div id="balance" class="row">
         <div class="col">
-            <table class="table table-sm">
-                <thead class="thead-dark">
+            <table class="table table-sm table-striped table-bordered">
+                <thead>
                 <tr>
                     <th>YEAR</th>
                     <th>MONTH</th>
@@ -86,52 +110,81 @@
                     <td th:text="${summary.getCosts()}">Text ...</td>
                     <td th:text="${summary.getCurrentBalance()}">Text ...</td>
                 </tr>
-                </td>
                 </tbody>
             </table>
         </div>
-        <div class="col">
-            <canvas id="summaryChart"></canvas>
+        <div id="incomesAndCostsChart" class="col">
             <script th:inline="javascript">
-                let x = [[${x}]];
-                let y = [[${y}]];
+                let monthTab = [[${months}]];
+                let incomeTab = [[${incomes}]];
+                let costTab = [[${costs}]];
             </script>
             <script>
-                let xValues = x;
-                let yValues = y;
-                new Chart("summaryChart", {
-                    type: 'bar',
-                    data: {
-                        datasets: [
-                            {
-                                data: yValues,
-                                backgroundColor: [
-                                    'rgb(255, 159, 64)',
-                                    'rgb(255, 159, 64)',
-                                    'rgb(255, 205, 86)',
-                                    'rgb(75, 192, 192)',
-                                    'rgb(75, 162, 235)',
-                                    'rgb(54, 64, 235)',
-                                    'rgb(54, 162, 235)',
-                                ],
-                            },
-                        ],
-                        labels: xValues,
-                    },
-                    options: {
-                        title: {
-                            display: true,
-                            text: "Costs"
-                        },
-                        plugins: {
-                            datalabels: {
-                                formatter: (value) => {
-                                    if (value > 0) return value;
-                                },
-                            },
-                        },
-                    },
-                });
+                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Month');
+                    data.addColumn('number', 'Incomes');
+                    data.addColumn('number', 'Costs');
+
+                    for (var i = 0; i < incomeTab.length; i++) {
+                        data.addRow([monthTab[i], incomeTab[i], costTab[i]]);
+                    }
+
+                    var options = {
+                        title: 'INCOMES AND COSTS'
+                    };
+
+                    var chart = new google.visualization.ColumnChart(document.getElementById('incomesAndCostsChart'));
+                    chart.draw(data, options);
+                }
+            </script>
+        </div>
+    </div>
+    <div id="categoryCost" class="row">
+        <div class="col">
+            <table class="table table-sm table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>COST</th>
+                    <th>EXPENSES</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="category : ${categoryCosts}">
+                    <td th:text="${category.key}">1</td>
+                    <td th:text="${category.value}">Text ...</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="costsChart" class="col">
+            <script th:inline="javascript">
+                let categoryTab = [[${categoryCosts.keySet()}]];
+                let categoryCostTab = [[${categoryCosts.values()}]];
+            </script>
+            <script>
+                google.charts.load('current', {'packages': ['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+
+                function drawChart() {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Cost');
+                    data.addColumn('number', 'Sum');
+
+                    for (var i = 0; i < categoryTab.length; i++) {
+                        data.addRow([categoryTab[i], categoryCostTab[i]]);
+                    }
+
+                    var options = {
+                        title: 'COST CATEGORIES'
+                    };
+
+                    var chart = new google.visualization.PieChart(document.getElementById('costsChart'));
+                    chart.draw(data, options);
+                }
             </script>
         </div>
     </div>
