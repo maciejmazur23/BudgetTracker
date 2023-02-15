@@ -27,7 +27,6 @@ public class Transaction {
     @NonNull
     private OPERATION operation;
 
-    @NonNull
     private CATEGORY category;
 
     @NonNull

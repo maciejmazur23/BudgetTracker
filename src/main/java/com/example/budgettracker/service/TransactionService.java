@@ -1,8 +1,14 @@
 package com.example.budgettracker.service;
 
-import org.springframework.stereotype.Service;
+import com.example.budgettracker.entities.Transaction;
 
-@Service
-public class TransactionService {
+import java.util.List;
 
+public interface TransactionService {
+
+    void saveTransaction(Transaction transaction);
+
+    List<Transaction> getTransactionsByUserId(Long id);
+
+    void deleteById(Long id);
 }
