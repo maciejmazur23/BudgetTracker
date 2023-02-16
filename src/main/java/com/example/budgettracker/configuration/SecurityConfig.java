@@ -25,34 +25,19 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder getBcryptPasswordEncoder() {
+    PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
-    }
-
-    public void start(){
-        com.example.budgettracker.entities.User user = new com.example.budgettracker.entities.User();
-        user.setEmail("user@wp.pl");
-        user.setPassword(getBcryptPasswordEncoder().encode("user123"));
-        user.setRole("USER");
-        try {
-            userRepo.save(user);
-        }catch (Exception e){
-            System.out.println("User already exist");
-        }
     }
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        start();
         List<com.example.budgettracker.entities.User> users = userRepo.findAll();
-        System.out.println(users);
         List<UserDetails> detailsList = users.stream()
                 .map(user -> User.withUsername(user.getEmail())
                         .password(user.getPassword())
                         .roles(user.getRole())
                         .build()
                 ).toList();
-        System.out.println(detailsList);
         return new InMemoryUserDetailsManager(detailsList);
     }
 

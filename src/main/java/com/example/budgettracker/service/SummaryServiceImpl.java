@@ -51,8 +51,10 @@ public class SummaryServiceImpl implements SummaryService {
         List<Summary> sortedSummaryList = summaries.stream()
                 .sorted(comparator)
                 .toList();
+
         sortedSummaryList.get(0).setPreviousBalance(BigDecimal.ZERO);
         BigDecimal previousBalance = BigDecimal.ZERO;
+
         int i = 0;
         for (Summary summary : sortedSummaryList) {
             if (i != 0) summary.setPreviousBalance(previousBalance);
