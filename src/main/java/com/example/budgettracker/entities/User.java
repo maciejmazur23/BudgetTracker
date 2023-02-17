@@ -3,10 +3,12 @@ package com.example.budgettracker.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 @Getter
 @Setter
+@ToString
 @Entity(name = "users")
 public class User {
 

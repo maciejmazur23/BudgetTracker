@@ -9,6 +9,7 @@ import com.example.budgettracker.service.SummaryService;
 import com.example.budgettracker.service.SummaryServiceImpl;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import java.time.Month;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@Slf4j
 @Controller
 public class SummaryApi {
     private final UserService userService;
@@ -38,16 +39,26 @@ public class SummaryApi {
     @GetMapping("/user/summary/{year}")
     public String summary(@PathVariable("year") Integer year, Principal principal, Model model) {
         String email = principal.getName();
+        log.warn("Email: [{}]", email);
         Long userId = userService.getIdByEmail(email);
+        log.warn("UserId: [{}]", userId);
         List<Transaction> transactions = transactionService.getTransactionsByUserId(userId);
+        log.info("Transactions: [{}]", transactions);
         Summaries summaries = summaryService.getSummaries(transactions);
+        log.info("Summaries: [{}]", summaries);
 
         List<Summary> yearSummaries = summaries.yearSummaries();
+        log.info("YearSummaries: [{}]", yearSummaries);
         List<Summary> summariesList = getSummariesList(year, summaries, yearSummaries);
+        log.info("SummariesList: [{}]", summariesList);
         List<Integer> years = getYears(yearSummaries);
+        log.info("Years: [{}]", years);
         List<BigDecimal> incomes = getIncomes(summariesList);
+        log.info("Incomes: [{}]", incomes);
         List<BigDecimal> costs = getCosts(summariesList);
+        log.info("Costs: [{}]", costs);
         Map<CATEGORY, BigDecimal> categoryMap = getCategoryCostMap(summariesList);
+        log.info("Category Map: [{}]", categoryMap);
 
         model.addAttribute("list", summariesList);
         model.addAttribute("years", years);
@@ -107,9 +118,10 @@ public class SummaryApi {
 
     @GetMapping("/user/summary")
     public String postYear(@ModelAttribute Year year) {
+        log.info("Year: [{}]", year);
         int intYear = year.getYear();
         if (year.getYear() == 0) intYear = LocalDate.now().getYear();
-
+        log.warn("Year: [{}]", year);
         return "redirect:/user/summary/" + intYear;
     }
 }

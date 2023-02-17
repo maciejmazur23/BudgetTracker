@@ -3,6 +3,7 @@ package com.example.budgettracker.controllers;
 import com.example.budgettracker.entities.Transaction;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class TransactionsApi {
     private final UserService userService;
@@ -27,7 +29,9 @@ public class TransactionsApi {
     @GetMapping("/user/transactions")
     public String get(Principal principal, Model model) {
         Long id = userService.getIdByEmail(principal.getName());
+        log.warn("Id: [{}]", id);
         List<Transaction> transactionList = getSortedTransactions(id, Comparator.comparing(Transaction::getDate).reversed());
+        log.info("TransactionList: [{}]", transactionList);
 
         model.addAttribute("transactionList", transactionList);
         model.addAttribute("newTransaction", new Transaction());
@@ -43,7 +47,9 @@ public class TransactionsApi {
 
     @PostMapping("/user/add-transaction")
     public String addTransaction(@ModelAttribute("newOperation") Transaction transaction, Principal principal) {
+        log.info("Transaction: [{}]", transaction);
         Long id = userService.getIdByEmail(principal.getName());
+        log.warn("Id: [{}]", id);
         transaction.setUserId(id);
         transactionService.saveTransaction(transaction);
 
@@ -52,6 +58,7 @@ public class TransactionsApi {
 
     @GetMapping("/user/delete-transaction/{id}")
     public String deleteTransaction(@PathVariable("id") Long id) {
+        log.info("Id: [{}]", id);
         transactionService.deleteById(id);
         return "redirect:/user/transactions";
     }
