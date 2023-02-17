@@ -7,6 +7,7 @@ import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.YearSummary;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SummaryServiceImpl implements SummaryService {
 
@@ -23,17 +25,21 @@ public class SummaryServiceImpl implements SummaryService {
         List<Summary> monthSummaries = new ArrayList<>();
 
         setMonthAndYearSummaries(yearSummaries, monthSummaries, transactions);
-
+        log.info("YearSummaries: [{}]", yearSummaries);
+        log.info("MonthSummaries: [{}]", monthSummaries);
         return new Summaries(monthSummaries, yearSummaries);
     }
 
     private void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<Transaction> transactions) {
         Map<Integer, List<Transaction>> collectByYear = transactions.stream()
                 .collect(Collectors.groupingBy(transaction -> transaction.getDate().getYear()));
+        log.info("CollectByYear: [{}]", collectByYear);
 
         for (Integer year : collectByYear.keySet()) {
             List<Transaction> yearTransactions = collectByYear.get(year);
+            log.info("YearTransactions: [{}]", yearTransactions);
             yearSummaries.add(getYearSummary(year, yearTransactions));
+            log.info("YearSummaries: [{}]", yearSummaries);
 
             Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(getMonthSummary(year, month,
                     yearTransactions.stream()
@@ -51,22 +57,27 @@ public class SummaryServiceImpl implements SummaryService {
         List<Summary> sortedSummaryList = summaries.stream()
                 .sorted(comparator)
                 .toList();
+        log.info("SortedSummaryList: [{}]", sortedSummaryList);
 
         sortedSummaryList.get(0).setPreviousBalance(BigDecimal.ZERO);
         BigDecimal previousBalance = BigDecimal.ZERO;
+        log.info("SortedSummaryList: [{}]", sortedSummaryList);
 
         int i = 0;
         for (Summary summary : sortedSummaryList) {
             if (i != 0) summary.setPreviousBalance(previousBalance);
+            log.info("Summary: [{}]", summary);
             i++;
             previousBalance = summary.getCurrentBalance()
                     .add(summary.getPreviousBalance());
+            log.info("PreviousBalance: [{}]", previousBalance);
         }
     }
 
     private YearSummary getYearSummary(int year, List<Transaction> list) {
         YearSummary yearSummary = new YearSummary();
         setFields(year, list, yearSummary);
+        log.info("YearSummary: [{}]", yearSummary);
         return yearSummary;
     }
 
@@ -74,6 +85,7 @@ public class SummaryServiceImpl implements SummaryService {
         MonthSummary monthSummary = new MonthSummary();
         setFields(year, monthList, monthSummary);
         monthSummary.setMonth(month);
+        log.info("MonthSummary: [{}]", monthSummary);
         return monthSummary;
     }
 
@@ -84,13 +96,20 @@ public class SummaryServiceImpl implements SummaryService {
         BigDecimal costs = BigDecimal.ZERO;
 
         for (Transaction transaction : monthList) {
+            log.info("Transaction: [{}]", transaction);
             CATEGORY category = transaction.getCategory();
             BigDecimal price = transaction.getPrice();
 
             if (transaction.getOperation().equals(OPERATION.COST)) {
                 costs = costs.add(price);
+                log.info("Cost: [{}]", costs);
                 categoryCosts.replace(category, categoryCosts.get(category).add(price));
-            } else incomes = incomes.add(price);
+                log.info("categoryCosts: [{}]", categoryCosts);
+            } else {
+                incomes = incomes.add(price);
+                log.info("Incomes: [{}]", incomes);
+            }
+
         }
 
         summary.setYear(year);
@@ -103,6 +122,7 @@ public class SummaryServiceImpl implements SummaryService {
     private Map<CATEGORY, BigDecimal> getCategoryCostMap() {
         Map<CATEGORY, BigDecimal> categoryCosts = new HashMap<>();
         for (CATEGORY category : CATEGORY.values()) categoryCosts.put(category, BigDecimal.ZERO);
+        log.info("CategoryCost: [{}]", categoryCosts);
         return categoryCosts;
     }
 }
