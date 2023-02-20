@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 public record UserService(UserRepo userRepo) {
 
     public Long getIdByEmail(String email) {
-        log.warn("Email: [{}]", email);
+        log.debug("Email: [{}]", email);
         User byEmail = userRepo.findByEmail(email).orElseThrow(() -> {
             throw new RuntimeException("User not found!");
         });
-        log.warn("Id: [{}]", byEmail);
+        log.debug("Id: [{}]", byEmail);
 
         return byEmail.getId();
     }
