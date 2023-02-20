@@ -29,7 +29,7 @@ public class TransactionsApi {
     @GetMapping("/user/transactions")
     public String get(Principal principal, Model model) {
         Long id = userService.getIdByEmail(principal.getName());
-        log.warn("Id: [{}]", id);
+        log.debug("Id: [{}]", id);
         List<Transaction> transactionList = getSortedTransactions(id, Comparator.comparing(Transaction::getDate).reversed());
         log.info("TransactionList: [{}]", transactionList);
 
@@ -49,7 +49,7 @@ public class TransactionsApi {
     public String addTransaction(@ModelAttribute("newOperation") Transaction transaction, Principal principal) {
         log.info("Transaction: [{}]", transaction);
         Long id = userService.getIdByEmail(principal.getName());
-        log.warn("Id: [{}]", id);
+        log.debug("Id: [{}]", id);
         transaction.setUserId(id);
         transactionService.saveTransaction(transaction);
 

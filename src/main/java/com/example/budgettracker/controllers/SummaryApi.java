@@ -39,9 +39,9 @@ public class SummaryApi {
     @GetMapping("/user/summary/{year}")
     public String summary(@PathVariable("year") Integer year, Principal principal, Model model) {
         String email = principal.getName();
-        log.warn("Email: [{}]", email);
+        log.debug("Email: [{}]", email);
         Long userId = userService.getIdByEmail(email);
-        log.warn("UserId: [{}]", userId);
+        log.debug("UserId: [{}]", userId);
         List<Transaction> transactions = transactionService.getTransactionsByUserId(userId);
         log.info("Transactions: [{}]", transactions);
         Summaries summaries = summaryService.getSummaries(transactions);
@@ -121,7 +121,7 @@ public class SummaryApi {
         log.info("Year: [{}]", year);
         int intYear = year.getYear();
         if (year.getYear() == 0) intYear = LocalDate.now().getYear();
-        log.warn("Year: [{}]", year);
+        log.debug("Year: [{}]", year);
         return "redirect:/user/summary/" + intYear;
     }
 }
