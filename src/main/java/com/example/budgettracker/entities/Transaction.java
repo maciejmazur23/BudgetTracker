@@ -2,8 +2,10 @@ package com.example.budgettracker.entities;
 
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -33,7 +35,6 @@ public class Transaction {
     @NonNull
     private BigDecimal price;
 
-    @NonNull
     private String description;
 
     @NonNull

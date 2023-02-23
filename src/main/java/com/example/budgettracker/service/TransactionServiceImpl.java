@@ -17,7 +17,7 @@ public class TransactionServiceImpl implements TransactionService{
 
     @Override
     public void saveTransaction(Transaction transaction) {
-        log.warn("Transaction: [{}]", transaction);
+        log.info("Transaction: [{}]", transaction);
         if (transaction.getOperation().equals(OPERATION.INCOME) && transaction.getCategory() != null){
             log.error("Operation INCOME not have category cost!");
             throw new RuntimeException("Operation INCOME not have category cost!");
