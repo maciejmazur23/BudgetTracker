@@ -19,7 +19,7 @@
     </appender>
 
 
-    <logger name="com.example.budgettracker" level="info" additivity="false">
+    <logger name="com.example.budgettracker" level="info" additivity="true">
         <appender-ref ref="FILE"/>
     </logger>
 
