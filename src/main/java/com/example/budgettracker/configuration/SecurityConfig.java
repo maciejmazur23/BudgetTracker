@@ -1,10 +1,8 @@
 package com.example.budgettracker.configuration;
 
 import com.example.budgettracker.repositories.UserRepo;
-import com.example.budgettracker.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.EventListener;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -13,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder getPasswordEncoder(){
+    PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -48,8 +47,14 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                         (request) -> request.requestMatchers("/user", "/user/**").authenticated()
                                 .anyRequest().permitAll()
-                ).formLogin().loginPage("/auth/login")
-                .defaultSuccessUrl("/user", true);
+                ).formLogin()
+                .loginPage("/auth/login")
+                .defaultSuccessUrl("/user")
+                .failureUrl("/auth/register")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                .logoutSuccessUrl("/auth/login");
 
         return http.build();
     }

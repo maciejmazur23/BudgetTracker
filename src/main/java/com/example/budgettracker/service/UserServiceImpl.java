@@ -28,7 +28,7 @@ public record UserServiceImpl(UserRepo userRepo, PasswordEncoder passwordEncoder
             return false;
         }
         user.setRole("USER");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User save = userRepo.save(user);
         log.info("Save user: [{}]", save);
         return true;
