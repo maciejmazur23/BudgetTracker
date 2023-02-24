@@ -1,31 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:form="http://www.w3.org/1999/xhtml"
+      lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link th:href="@{/css/custom.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/menu.css}" rel="stylesheet">
     <title>Budget Tracker</title>
-    <style>
-        #container {
-            width: 80%;
-            margin-left: 10%;
-            margin-right: 10%;
-            height: 500px;
-            display: flex;
-            justify-content: center;
-        }
-        .btn{
-            margin-top: 10%;
-            margin-bottom: 10%;
-            font-size: 35px;
-            border-radius: 20px;
-        }
-        .button-group{
-            margin: 5%;
-            width: 40%;
-        }
-    </style>
 </head>
 <body>
 <div id="header" style="text-align: center;">
@@ -35,6 +17,7 @@
     <div class="button-group">
         <a href="/user/transactions" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Add transaction</a>
         <a href="/user/summary" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Summary</a>
+        <a href="/logout" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Logout</a>
     </div>
 </div>
 </body>

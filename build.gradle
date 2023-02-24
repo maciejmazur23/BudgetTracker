@@ -26,8 +26,6 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.0.5'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'ch.qos.logback:logback-classic:1.4.5'
-
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'

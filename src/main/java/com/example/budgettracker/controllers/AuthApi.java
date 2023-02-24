@@ -26,21 +26,12 @@ public class AuthApi {
         log.info("User: [{}]", user);
         boolean isSaved = userService.saveUser(user);
         if (isSaved){
-            return "redirect:/login";
-        }return "redirect:/auth";
+            return "redirect:/auth/login";
+        }return "redirect:/auth/register";
     }
 
     @GetMapping("/auth/login")
-    public String login(Model model){
-        model.addAttribute("user", new User());
+    public String login(){
         return "login-page";
-    }
-
-    @PostMapping("/auth/login")
-    public String login(User user){
-        log.info("User: [{}]", user);
-        boolean isInDatabase = userService.checkUser(user);
-        if (isInDatabase) return "redirect:/user";
-        else return "/auth/login";
     }
 }
