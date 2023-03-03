@@ -24,10 +24,11 @@ public class SummaryServiceImpl implements SummaryService {
         List<Summary> yearSummaries = new ArrayList<>();
         List<Summary> monthSummaries = new ArrayList<>();
 
-        setMonthAndYearSummaries(yearSummaries, monthSummaries, transactions);
-        log.info("YearSummaries: [{}]", yearSummaries);
-        log.info("MonthSummaries: [{}]", monthSummaries);
-        return new Summaries(monthSummaries, yearSummaries);
+        if (transactions.size() > 0){
+            setMonthAndYearSummaries(yearSummaries, monthSummaries, transactions);
+            log.info("YearSummaries: [{}]", yearSummaries);
+            log.info("MonthSummaries: [{}]", monthSummaries);
+        }return new Summaries(monthSummaries, yearSummaries);
     }
 
     private void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<Transaction> transactions) {

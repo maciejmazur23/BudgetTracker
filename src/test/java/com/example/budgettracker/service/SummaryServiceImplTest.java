@@ -1,5 +1,6 @@
 package com.example.budgettracker.service;
 
+import com.example.budgettracker.entities.Transaction;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import org.junit.jupiter.api.Assertions;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -54,5 +56,20 @@ class SummaryServiceImplTest {
         for (int i = 0; i < expectedMonths.size(); i++) {
             Assertions.assertEquals(expectedMonths.get(i), resultMonths.get(i));
         }
+    }
+
+    @Test
+    @DisplayName("Check if List<Transaction> size = 0")
+    void shouldPassIfSizeIsZero(){
+        //given
+        List<Transaction> transactions = Collections.emptyList();
+        int expectedSize = 0;
+
+        //when
+        Summaries result = summaryService.getSummaries(transactions);
+
+        //then
+        Assertions.assertEquals(expectedSize, result.monthSummaries().size());
+        Assertions.assertEquals(expectedSize, result.yearSummaries().size());
     }
 }
