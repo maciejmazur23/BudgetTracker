@@ -9,6 +9,7 @@ import com.example.budgettracker.service.SummaryService;
 import com.example.budgettracker.service.SummaryServiceImpl;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,16 +26,11 @@ import java.util.List;
 import java.util.Map;
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class SummaryApi {
     private final UserService userService;
     private final TransactionService transactionService;
     private final SummaryService summaryService;
-
-    public SummaryApi(UserService userService, TransactionService transactionService, SummaryServiceImpl summaryService) {
-        this.userService = userService;
-        this.transactionService = transactionService;
-        this.summaryService = summaryService;
-    }
 
     @GetMapping("/user/summary/{year}")
     public String summary(@PathVariable("year") Integer year, Principal principal, Model model) {

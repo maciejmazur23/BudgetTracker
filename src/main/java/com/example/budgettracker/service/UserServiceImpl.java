@@ -2,6 +2,7 @@ package com.example.budgettracker.service;
 
 import com.example.budgettracker.entities.User;
 import com.example.budgettracker.repositories.UserRepo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,13 +13,16 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public record UserServiceImpl(
-        UserRepo userRepo, PasswordEncoder passwordEncoder,
-        InMemoryUserDetailsManager inMemoryUserDetailsManager) implements UserService {
+@RequiredArgsConstructor
+public class UserServiceImpl implements UserService {
+    private final UserRepo userRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final InMemoryUserDetailsManager inMemoryUserDetailsManager;
 
     private static final String REGEX_PATTERN = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
+    @Override
     public Long getIdByEmail(String email) {
         log.debug("Email: [{}]", email);
         User byEmail = userRepo.findByEmail(email).orElseThrow(() -> {
@@ -34,7 +38,7 @@ public record UserServiceImpl(
     public boolean saveUser(User user) {
         boolean matches = Pattern.compile(REGEX_PATTERN).matcher(user.getEmail()).matches();
 
-        if (!matches){
+        if (!matches) {
             log.warn("Email [{}] is out of pattern!", user.getEmail());
             return false;
         }
