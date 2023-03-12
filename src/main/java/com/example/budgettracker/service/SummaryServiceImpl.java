@@ -1,10 +1,8 @@
 package com.example.budgettracker.service;
 
 import com.example.budgettracker.entities.Transaction;
-import com.example.budgettracker.model.MonthSummary;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
-import com.example.budgettracker.model.YearSummary;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +22,12 @@ public class SummaryServiceImpl implements SummaryService {
         List<Summary> yearSummaries = new ArrayList<>();
         List<Summary> monthSummaries = new ArrayList<>();
 
-        if (transactions.size() > 0){
+        if (transactions.size() > 0) {
             setMonthAndYearSummaries(yearSummaries, monthSummaries, transactions);
             log.info("YearSummaries: [{}]", yearSummaries);
             log.info("MonthSummaries: [{}]", monthSummaries);
-        }return new Summaries(monthSummaries, yearSummaries);
+        }
+        return new Summaries(monthSummaries, yearSummaries);
     }
 
     private void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<Transaction> transactions) {
@@ -39,13 +38,14 @@ public class SummaryServiceImpl implements SummaryService {
         for (Integer year : collectByYear.keySet()) {
             List<Transaction> yearTransactions = collectByYear.get(year);
             log.info("YearTransactions: [{}]", yearTransactions);
-            yearSummaries.add(getYearSummary(year, yearTransactions));
-            log.info("YearSummaries: [{}]", yearSummaries);
+            yearSummaries.add(getSummary(year, null, yearTransactions));
 
-            Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(getMonthSummary(year, month,
-                    yearTransactions.stream()
-                            .filter(transaction -> transaction.getDate().getMonth().equals(month))
-                            .toList())));
+            Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(
+                    getSummary(year, month,
+                            yearTransactions.stream()
+                                    .filter(transaction -> transaction.getDate().getMonth().equals(month))
+                                    .toList())
+            ));
         }
 
         Comparator<Summary> yearComparator = Comparator.comparing(Summary::getYear);
@@ -75,19 +75,16 @@ public class SummaryServiceImpl implements SummaryService {
         }
     }
 
-    private YearSummary getYearSummary(int year, List<Transaction> list) {
-        YearSummary yearSummary = new YearSummary();
-        setFields(year, list, yearSummary);
-        log.info("YearSummary: [{}]", yearSummary);
-        return yearSummary;
-    }
+    private Summary getSummary(Integer year, Month month, List<Transaction> transactions) {
+        Summary summary = new Summary();
+        setFields(year, transactions, summary);
 
-    private MonthSummary getMonthSummary(Integer year, Month month, List<Transaction> monthList) {
-        MonthSummary monthSummary = new MonthSummary();
-        setFields(year, monthList, monthSummary);
-        monthSummary.setMonth(month);
-        log.info("MonthSummary: [{}]", monthSummary);
-        return monthSummary;
+        if (month != null) {
+            summary.setMonth(month);
+            log.info("MonthSummary: [{}]", summary);
+        } else log.info("YearSummary: [{}]", summary);
+
+        return summary;
     }
 
     private void setFields(Integer year, List<Transaction> monthList, Summary summary) {
