@@ -3,6 +3,7 @@ package com.example.budgettracker.controllers;
 import com.example.budgettracker.entities.Transaction;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +18,10 @@ import java.util.List;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class TransactionsApi {
     private final UserService userService;
     private final TransactionService transactionService;
-
-    public TransactionsApi(UserService userService, TransactionService transactionService) {
-        this.userService = userService;
-        this.transactionService = transactionService;
-    }
 
     @GetMapping("/user/transactions")
     public String get(Principal principal, Model model) {

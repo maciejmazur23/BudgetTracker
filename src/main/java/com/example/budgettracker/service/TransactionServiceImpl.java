@@ -9,9 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 @Slf4j
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepo transactionRepo;
 
