@@ -1,6 +1,6 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.Transaction;
+import com.example.budgettracker.entities.TransactionEntity;
 import com.example.budgettracker.model.enums.OPERATION;
 import com.example.budgettracker.repositories.TransactionRepo;
 import lombok.RequiredArgsConstructor;
@@ -17,21 +17,26 @@ public class TransactionServiceImpl implements TransactionService{
     private final TransactionRepo transactionRepo;
 
     @Override
-    public void saveTransaction(Transaction transaction) {
-        log.info("Transaction: [{}]", transaction);
-        if (transaction.getOperation().equals(OPERATION.INCOME) && transaction.getCategory() != null){
+    public void saveTransaction(TransactionEntity transactionEntity) {
+        log.info("Transaction: [{}]", transactionEntity);
+        if (transactionEntity.getOperation().equals(OPERATION.INCOME) && transactionEntity.getCategory() != null){
             log.error("Operation INCOME not have category cost!");
             throw new RuntimeException("Operation INCOME not have category cost!");
-        }else if (transaction.getOperation().equals(OPERATION.COST) && transaction.getCategory() == null){
+        }else if (transactionEntity.getOperation().equals(OPERATION.COST) && transactionEntity.getCategory() == null){
             log.error("Operation COST must have category cost!");
             throw new RuntimeException("Operation COST must have category cost!");
         }
-        transactionRepo.save(transaction);
+        transactionRepo.save(transactionEntity);
     }
 
     @Override
-    public List<Transaction> getTransactionsByUserId(Long id) {
-        return transactionRepo.findByUserId(id);
+    public List<TransactionEntity> getTransactionsByUserId(Long id) {
+        try{
+            return transactionRepo.findByUserId(id);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+//            throw new RuntimeException("Could not find Transaction by user id!");
+        }
     }
 
     @Override

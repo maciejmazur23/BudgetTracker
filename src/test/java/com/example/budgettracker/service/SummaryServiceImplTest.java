@@ -1,6 +1,6 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.Transaction;
+import com.example.budgettracker.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +23,7 @@ class SummaryServiceImplTest {
     @BeforeEach
     void beforeEach() {
         this.summaryServiceImplDate = new SummaryServiceImplDate();
-        this.summaryService= new SummaryServiceImpl();
+        this.summaryService = new SummaryServiceImpl(new SummaryCreatorImpl());
     }
 
     @Test
@@ -60,13 +60,13 @@ class SummaryServiceImplTest {
 
     @Test
     @DisplayName("Check if List<Transaction> size = 0")
-    void shouldPassIfSizeIsZero(){
+    void shouldPassIfSizeIsZero() {
         //given
-        List<Transaction> transactions = Collections.emptyList();
+        List<TransactionEntity> transactionEntities = Collections.emptyList();
         int expectedSize = 0;
 
         //when
-        Summaries result = summaryService.getSummaries(transactions);
+        Summaries result = summaryService.getSummaries(transactionEntities);
 
         //then
         Assertions.assertEquals(expectedSize, result.monthSummaries().size());

@@ -1,12 +1,11 @@
 package com.example.budgettracker.controllers;
 
-import com.example.budgettracker.entities.Transaction;
+import com.example.budgettracker.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.Year;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.service.SummaryService;
-import com.example.budgettracker.service.SummaryServiceImpl;
 import com.example.budgettracker.service.TransactionService;
 import com.example.budgettracker.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,9 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -32,29 +31,32 @@ public class SummaryApi {
     private final TransactionService transactionService;
     private final SummaryService summaryService;
 
+    @GetMapping("/user/summary")
+    public String postYear(@ModelAttribute Year year) {
+        log.info("Year: [{}]", year);
+        int intYear = year.getYear();
+        if (year.getYear() == 0) intYear = LocalDate.now().getYear();
+        log.debug("Year: [{}]", year);
+        return "redirect:/user/summary/" + intYear;
+    }
+
     @GetMapping("/user/summary/{year}")
     public String summary(@PathVariable("year") Integer year, Principal principal, Model model) {
-        String email = principal.getName();
-        log.debug("Email: [{}]", email);
-        Long userId = userService.getIdByEmail(email);
-        log.debug("UserId: [{}]", userId);
-        List<Transaction> transactions = transactionService.getTransactionsByUserId(userId);
-        log.info("Transactions: [{}]", transactions);
-        Summaries summaries = summaryService.getSummaries(transactions);
-        log.info("Summaries: [{}]", summaries);
+        Summaries summaries = getSummaries(principal);
+        addModelAttributes(year, model, summaries);
 
+        return "summary-page";
+    }
+
+    private void addModelAttributes(Integer year, Model model, Summaries summaries) {
         List<Summary> yearSummaries = summaries.yearSummaries();
-        log.info("YearSummaries: [{}]", yearSummaries);
-        List<Summary> summariesList = getSummariesList(year, summaries, yearSummaries);
-        log.info("SummariesList: [{}]", summariesList);
-        List<Integer> years = getYears(yearSummaries);
-        log.info("Years: [{}]", years);
-        List<BigDecimal> incomes = getIncomes(summariesList);
-        log.info("Incomes: [{}]", incomes);
-        List<BigDecimal> costs = getCosts(summariesList);
-        log.info("Costs: [{}]", costs);
-        Map<CATEGORY, BigDecimal> categoryMap = getCategoryCostMap(summariesList);
-        log.info("Category Map: [{}]", categoryMap);
+        List<Summary> summariesList = summaryService.getSummariesList(year, summaries, yearSummaries);
+        List<Integer> years = summaryService.getYears(yearSummaries);
+        List<BigDecimal> incomes = summaryService.getIncomes(summariesList);
+        List<BigDecimal> costs = summaryService.getCosts(summariesList);
+        Map<CATEGORY, BigDecimal> categoryMap = summaryService.getCategoryCostMap(summariesList);
+
+        logAttributes(yearSummaries, summariesList, years, incomes, costs, categoryMap);
 
         model.addAttribute("list", summariesList);
         model.addAttribute("years", years);
@@ -63,61 +65,30 @@ public class SummaryApi {
         model.addAttribute("categoryCosts", categoryMap);
         model.addAttribute("months", Month.values());
         model.addAttribute("chosenYear", new Year());
-
-        return "summary-page";
     }
 
-    private List<BigDecimal> getCosts(List<Summary> summariesList) {
-        return summariesList.stream()
-                .map(Summary::getCosts)
-                .toList();
+    private void logAttributes(
+            List<Summary> yearSummaries, List<Summary> summariesList, List<Integer> years,
+            List<BigDecimal> incomes, List<BigDecimal> costs, Map<CATEGORY, BigDecimal> categoryMap
+    ) {
+        log.info("YearSummaries: [{}]", yearSummaries);
+        log.info("SummariesList: [{}]", summariesList);
+        log.info("Years: [{}]", years);
+        log.info("Incomes: [{}]", incomes);
+        log.info("Costs: [{}]", costs);
+        log.info("Category Map: [{}]", categoryMap);
     }
 
-    private List<BigDecimal> getIncomes(List<Summary> summariesList) {
-        return summariesList.stream()
-                .map(Summary::getIncomes)
-                .toList();
-    }
+    private Summaries getSummaries(Principal principal) {
+        String email = principal.getName();
+        Long userId = userService.getIdByEmail(email);
+        List<TransactionEntity> transactionEntities = transactionService.getTransactionsByUserId(userId);
+        Summaries summaries = summaryService.getSummaries(transactionEntities);
 
-    private List<Integer> getYears(List<Summary> yearSummaries) {
-        return yearSummaries.stream()
-                .map(Summary::getYear)
-                .toList();
-    }
-
-    private List<Summary> getSummariesList(Integer year, Summaries summaries, List<Summary> yearSummaries) {
-        List<Summary> summariesList;
-
-        if (year == 1) summariesList = yearSummaries;
-        else summariesList = summaries.monthSummaries().stream()
-                .filter(summary -> summary.getYear() == year)
-                .toList();
-
-        return summariesList;
-    }
-
-    private Map<CATEGORY, BigDecimal> getCategoryCostMap(List<Summary> summariesList) {
-        Map<CATEGORY, BigDecimal> categoryMap = new HashMap<>();
-
-        for (CATEGORY category : CATEGORY.values()) {
-            categoryMap.put(category, BigDecimal.ZERO);
-        }
-
-        summariesList.forEach(summary -> {
-            Map<CATEGORY, BigDecimal> categoryCosts = summary.getCategoryCosts();
-            categoryCosts.forEach(
-                    (key, value) -> categoryMap.replace(key, categoryMap.get(key).add(value))
-            );
-        });
-        return categoryMap;
-    }
-
-    @GetMapping("/user/summary")
-    public String postYear(@ModelAttribute Year year) {
-        log.info("Year: [{}]", year);
-        int intYear = year.getYear();
-        if (year.getYear() == 0) intYear = LocalDate.now().getYear();
-        log.debug("Year: [{}]", year);
-        return "redirect:/user/summary/" + intYear;
+        log.debug("Email: [{}]", email);
+        log.debug("UserId: [{}]", userId);
+        log.info("Transactions: [{}]", transactionEntities);
+        log.info("Summaries: [{}]", summaries);
+        return summaries;
     }
 }

@@ -32,4 +32,4 @@ The following dependencies are downloaded with spring boot:
 
 ## TODO
 * Option to export summaries to excel
-* Option to add your own categories by users
+* Option to add your own categories by user
