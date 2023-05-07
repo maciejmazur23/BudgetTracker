@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml" xmlns:form="http://www.w3.org/1999/xhtml"
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
       lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,15 +10,38 @@
     <title>Budget Tracker</title>
 </head>
 <body>
-<div id="header" style="text-align: center;">
-    <label>Budget Tracker</label>
-</div>
-<div id="container">
-    <div class="button-group">
-        <a href="/user/transactions" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Add transaction</a>
-        <a href="/user/summary" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Summary</a>
-        <a href="/logout" class="btn btn-primary btn-lg btn-block" role="button" aria-pressed="true">Logout</a>
+<div id="header" class="fixed-top">
+    <div id="menu-link" class="d-inline">
+        <a href="/user" class="link">Budget Tracker</a>
     </div>
+    <label style="margin-left: 1%;">Welcome</label>
 </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav mr-auto navbar-nav-scroll">
+            <div class="d-inline">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/transactions">Transactions</a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/summary" role="button">Summary</a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                </li>
+            </div>
+        </ul>
+    </div>
+</nav>
+<div id="container" class="h-100"></div>
 </body>
 </html>
