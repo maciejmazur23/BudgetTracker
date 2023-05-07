@@ -12,65 +12,104 @@
     <title>Transactions</title>
 </head>
 <body>
-<div id="header">
+<div id="header" class="fixed-top">
     <div id="menu-link" class="d-inline">
         <a href="/user" class="link">Budget Tracker</a>
     </div>
     <label style="margin-left: 1%;">Transactions</label>
 </div>
-<div id="container">
-    <div class="add-panel">
-        <form th:action="@{/user/add-transaction}" th:object="${newTransaction}" method="post">
-            <div class="form-row">
-                <div class="col">
-                    <input class="form-control" type="date" id="start" name="trip-start"
-                           min="2020-01-01" max="2025-12-31"
-                           th:field="*{date}"
-                           required
-                    />
-                </div>
-                <div class="col">
-                    <select class="form-control custom-select" id="transactionList" th:field="*{operation}"
-                            onchange="makeDisable()" required>
-                        <option selected disabled value="">operation</option>
-                        <option value="INCOME">INCOME</option>
-                        <option value="COST">COST</option>
-                    </select>
-                    <div class="invalid-feedback">Example invalid custom select feedback</div>
-                </div>
-                <div class="col">
-                    <select class="form-control custom-select" id="categoryList" th:field="*{category}" disabled>
-                        <option selected disabled value="">category</option>
-                        <option value="SPORT">SPORT</option>
-                        <option value="FOOD">FOOD</option>
-                        <option value="ENTERTAINMENT">ENTERTAINMENT</option>
-                        <option value="SHOPPING">SHOPPING</option>
-                        <option value="TRANSPORT">TRANSPORT</option>
-                        <option value="HOUSE">HOUSE</option>
-                        <option value="OTHER">OTHER</option>
-                    </select>
-                    <div class="invalid-feedback">Example invalid custom select feedback</div>
-                </div>
-                <div class="col">
-                    <input class="form-control" id="price" type="number" placeholder="4.99" step="0.01" min="0"
-                           max="1000000.00"
-                           th:field="*{price}"
-                           required
-                    />
-                </div>
-                <div class="col">
-                    <input class="form-control" id="description"
-                           type="text" placeholder="description"
-                           th:field="*{description}" required>
-                </div>
-                <div id="send" class="col">
-                    <input id="save" class="btn btn-primary" type="submit" value="Save"/>
-                </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <ul class="navbar-nav mr-auto">
+        <div class="d-inline">
+            <li class="nav-item">
+                <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item active">
+                <a class="nav-link" href="/user/transactions">Transactions</a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/summary" role="button">Summary</a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </div>
+    </ul>
+</nav>
+<div class="add-panel">
+    <label style="margin-left: 2%;font-size:30px;font-family: Impact,fantasy">Add transaction</label>
+    <form th:action="@{/user/add-transaction}" th:object="${newTransaction}" method="post">
+        <div class="form-row">
+            <div class="col">
+                <label>Date</label>
+                <input class="form-control" type="date" id="start" name="trip-start"
+                       min="2020-01-01" max="2025-12-31"
+                       th:field="*{date}"
+                       required
+                />
             </div>
-        </form>
-    </div>
+            <div class="col">
+                <label>Operation</label>
+                <select class="form-control custom-select" id="transactionList" th:field="*{operation}"
+                        onchange="makeDisable()" required>
+                    <option selected disabled value="">operation</option>
+                    <option value="INCOME">INCOME</option>
+                    <option value="COST">COST</option>
+                </select>
+                <div class="invalid-feedback">Example invalid custom select feedback</div>
+            </div>
+            <div class="col">
+                <label>Category</label>
+                <select class="form-control custom-select" id="categoryList" th:field="*{category}" disabled>
+                    <option selected disabled value="">category</option>
+                    <option value="SPORT">SPORT</option>
+                    <option value="FOOD">FOOD</option>
+                    <option value="ENTERTAINMENT">ENTERTAINMENT</option>
+                    <option value="SHOPPING">SHOPPING</option>
+                    <option value="TRANSPORT">TRANSPORT</option>
+                    <option value="HOUSE">HOUSE</option>
+                    <option value="OTHER">OTHER</option>
+                </select>
+                <div class="invalid-feedback">Example invalid custom select feedback</div>
+            </div>
+            <div class="col">
+                <label>Price</label>
+                <input class="form-control" id="price" type="number" placeholder="4.99" step="0.01" min="0"
+                       max="1000000.00"
+                       th:field="*{price}"
+                       required
+                />
+            </div>
+            <div class="col">
+                <label>Description</label>
+                <input class="form-control" id="description"
+                       type="text" placeholder="description"
+                       th:field="*{description}" required>
+            </div>
+            <div id="send" class="col">
+                <input id="save" class="btn btn-warning" type="submit" value="Add"/>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="container">
     <div id="transactions">
         <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Operation</th>
+                <th scope="col">Category</th>
+                <th scope="col">Price</th>
+                <th scope="col">Description</th>
+            </tr>
+            </thead>
             <tbody>
             <tr th:each="op : ${transactionList}">
                 <td th:text="${op.getDate()}">1</td>
@@ -79,7 +118,7 @@
                 <td th:text="${op.getPrice()}">Text ...</td>
                 <td th:text="${op.getDescription()}">Text ...</td>
                 <td>
-                    <a th:href="@{/user/delete-transaction/{id}(id=${op.getId()})}" class="btn btn-primary">Delete</a>
+                    <a th:href="@{/user/delete-transaction/{id}(id=${op.getId()})}" class="btn btn-warning">Delete</a>
                 </td>
             </tr>
             </tbody>

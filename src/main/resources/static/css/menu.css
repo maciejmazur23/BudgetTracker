@@ -1,18 +1,4 @@
 #container {
-    width: 80%;
-    margin-left: 10%;
-    margin-right: 10%;
-    height: 500px;
+    width: 100%;
     display: flex;
-    justify-content: center;
-}
-.btn{
-    margin-top: 10%;
-    margin-bottom: 10%;
-    font-size: 35px;
-    border-radius: 20px;
-}
-.button-group{
-    margin: 5%;
-    width: 40%;
 }

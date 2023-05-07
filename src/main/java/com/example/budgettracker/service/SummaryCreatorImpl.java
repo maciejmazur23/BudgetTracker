@@ -8,13 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class SummaryCreatorImpl implements SummaryCreator{
+public class SummaryCreatorImpl implements SummaryCreator {
 
     @Override
     public void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<TransactionEntity> transactionEntities) {
@@ -28,11 +29,9 @@ public class SummaryCreatorImpl implements SummaryCreator{
             yearSummaries.add(getSummary(year, null, yearTransactionEntities));
 
             Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(
-                    getSummary(year, month,
-                            yearTransactionEntities.stream()
-                                    .filter(transaction -> transaction.getDate().getMonth().equals(month))
-                                    .toList())
-            ));
+                    getSummary(year, month, yearTransactionEntities.stream()
+                            .filter(transaction -> transaction.getDate().getMonth().equals(month))
+                            .toList())));
         }
 
         Comparator<Summary> yearComparator = Comparator.comparing(Summary::getYear);
@@ -65,7 +64,15 @@ public class SummaryCreatorImpl implements SummaryCreator{
 
         int i = 0;
         for (Summary summary : sortedSummaryList) {
-            if (i != 0) summary.setPreviousBalance(previousBalance);
+            if (i != 0)
+                summary.setPreviousBalance(previousBalance);
+
+            if (summary.getMonth() != null && LocalDate.now().compareTo(LocalDate.of(
+                    summary.getYear(), summary.getMonth(), 1
+            )) < 0) {
+                summary.setPreviousBalance(BigDecimal.ZERO);
+            }
+
             log.info("Summary: [{}]", summary);
             i++;
             previousBalance = summary.getCurrentBalance()
