@@ -1,10 +1,10 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.User;
+import com.example.budgettracker.entities.UserEntity;
 
 public interface UserService {
 
     Long getIdByEmail(String email);
 
-    boolean saveUser(User user);
+    boolean saveUser(UserEntity userEntity);
 }

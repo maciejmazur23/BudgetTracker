@@ -1,126 +1,86 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.Transaction;
+import com.example.budgettracker.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.enums.CATEGORY;
-import com.example.budgettracker.model.enums.OPERATION;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.Month;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class SummaryServiceImpl implements SummaryService {
+    private final SummaryCreator summaryCreator;
 
     @Override
-    public Summaries getSummaries(List<Transaction> transactions) {
+    public Summaries getSummaries(List<TransactionEntity> transactionEntities) {
         List<Summary> yearSummaries = new ArrayList<>();
         List<Summary> monthSummaries = new ArrayList<>();
 
-        if (transactions.size() > 0) {
-            setMonthAndYearSummaries(yearSummaries, monthSummaries, transactions);
+        if (transactionEntities.size() > 0) {
+            summaryCreator.setMonthAndYearSummaries(yearSummaries, monthSummaries, transactionEntities);
             log.info("YearSummaries: [{}]", yearSummaries);
             log.info("MonthSummaries: [{}]", monthSummaries);
         }
         return new Summaries(monthSummaries, yearSummaries);
     }
 
-    private void setMonthAndYearSummaries(List<Summary> yearSummaries, List<Summary> monthSummaries, List<Transaction> transactions) {
-        Map<Integer, List<Transaction>> collectByYear = transactions.stream()
-                .collect(Collectors.groupingBy(transaction -> transaction.getDate().getYear()));
-        log.info("CollectByYear: [{}]", collectByYear);
-
-        for (Integer year : collectByYear.keySet()) {
-            List<Transaction> yearTransactions = collectByYear.get(year);
-            log.info("YearTransactions: [{}]", yearTransactions);
-            yearSummaries.add(getSummary(year, null, yearTransactions));
-
-            Arrays.stream(Month.values()).forEach(month -> monthSummaries.add(
-                    getSummary(year, month,
-                            yearTransactions.stream()
-                                    .filter(transaction -> transaction.getDate().getMonth().equals(month))
-                                    .toList())
-            ));
-        }
-
-        Comparator<Summary> yearComparator = Comparator.comparing(Summary::getYear);
-        Comparator<Summary> monthComparator = yearComparator.thenComparing(Summary::getMonth);
-        setPreviousBalance(yearSummaries, yearComparator);
-        setPreviousBalance(monthSummaries, monthComparator);
-    }
-
-    private void setPreviousBalance(List<Summary> summaries, Comparator<Summary> comparator) {
-        List<Summary> sortedSummaryList = summaries.stream()
-                .sorted(comparator)
+    @Override
+    public List<BigDecimal> getCosts(List<Summary> summariesList) {
+        return summariesList.stream()
+                .map(Summary::getCosts)
                 .toList();
-        log.info("SortedSummaryList: [{}]", sortedSummaryList);
-
-        sortedSummaryList.get(0).setPreviousBalance(BigDecimal.ZERO);
-        BigDecimal previousBalance = BigDecimal.ZERO;
-        log.info("SortedSummaryList: [{}]", sortedSummaryList);
-
-        int i = 0;
-        for (Summary summary : sortedSummaryList) {
-            if (i != 0) summary.setPreviousBalance(previousBalance);
-            log.info("Summary: [{}]", summary);
-            i++;
-            previousBalance = summary.getCurrentBalance()
-                    .add(summary.getPreviousBalance());
-            log.info("PreviousBalance: [{}]", previousBalance);
-        }
     }
 
-    private Summary getSummary(Integer year, Month month, List<Transaction> transactions) {
-        Summary summary = new Summary();
-        setFields(year, transactions, summary);
-
-        if (month != null) {
-            summary.setMonth(month);
-            log.info("MonthSummary: [{}]", summary);
-        } else log.info("YearSummary: [{}]", summary);
-
-        return summary;
+    @Override
+    public List<BigDecimal> getIncomes(List<Summary> summariesList) {
+        return summariesList.stream()
+                .map(Summary::getIncomes)
+                .toList();
     }
 
-    private void setFields(Integer year, List<Transaction> monthList, Summary summary) {
-        Map<CATEGORY, BigDecimal> categoryCosts = getCategoryCostMap();
+    @Override
+    public List<Integer> getYears(List<Summary> yearSummaries) {
+        return yearSummaries.stream()
+                .map(Summary::getYear)
+                .toList();
+    }
 
-        BigDecimal incomes = BigDecimal.ZERO;
-        BigDecimal costs = BigDecimal.ZERO;
+    @Override
+    public List<Summary> getSummariesList(Integer year, Summaries summaries, List<Summary> yearSummaries) {
+        List<Summary> summariesList;
 
-        for (Transaction transaction : monthList) {
-            log.info("Transaction: [{}]", transaction);
-            CATEGORY category = transaction.getCategory();
-            BigDecimal price = transaction.getPrice();
+        if (year == 1) summariesList = yearSummaries;
+        else summariesList = summaries.monthSummaries().stream()
+                .filter(summary -> summary.getYear() == year)
+                .toList();
 
-            if (transaction.getOperation().equals(OPERATION.COST)) {
-                costs = costs.add(price);
-                log.info("Cost: [{}]", costs);
-                categoryCosts.replace(category, categoryCosts.get(category).add(price));
-                log.info("categoryCosts: [{}]", categoryCosts);
-            } else {
-                incomes = incomes.add(price);
-                log.info("Incomes: [{}]", incomes);
-            }
+        return summariesList;
+    }
 
+    @Override
+    public Map<CATEGORY, BigDecimal> getCategoryCostMap(List<Summary> summariesList) {
+        Map<CATEGORY, BigDecimal> categoryMap = new HashMap<>();
+
+        for (CATEGORY category : CATEGORY.values()) {
+            categoryMap.put(category, BigDecimal.ZERO);
         }
 
-        summary.setYear(year);
-        summary.setCosts(costs);
-        summary.setIncomes(incomes);
-        summary.setCurrentBalance(incomes.subtract(costs));
-        summary.setCategoryCosts(categoryCosts);
+        summariesList.forEach(summary -> {
+            Map<CATEGORY, BigDecimal> categoryCosts = summary.getCategoryCosts();
+            categoryCosts.forEach(
+                    (key, value) -> categoryMap.replace(key, categoryMap.get(key).add(value))
+            );
+        });
+        return categoryMap;
     }
 
-    private Map<CATEGORY, BigDecimal> getCategoryCostMap() {
-        Map<CATEGORY, BigDecimal> categoryCosts = new HashMap<>();
-        for (CATEGORY category : CATEGORY.values()) categoryCosts.put(category, BigDecimal.ZERO);
-        log.info("CategoryCost: [{}]", categoryCosts);
-        return categoryCosts;
-    }
 }

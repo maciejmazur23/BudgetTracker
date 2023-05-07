@@ -1,5 +1,6 @@
 package com.example.budgettracker.configuration;
 
+import com.example.budgettracker.entities.UserEntity;
 import com.example.budgettracker.repositories.UserRepo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +33,8 @@ public class SecurityConfig {
 
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        List<com.example.budgettracker.entities.User> users = userRepo.findAll();
-        List<UserDetails> detailsList = users.stream()
+        List<UserEntity> userEntities = userRepo.findAll();
+        List<UserDetails> detailsList = userEntities.stream()
                 .map(user -> User.withUsername(user.getEmail())
                         .password(user.getPassword())
                         .roles(user.getRole())
