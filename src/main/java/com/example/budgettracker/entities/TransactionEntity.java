@@ -2,10 +2,7 @@ package com.example.budgettracker.entities;
 
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.lang.NonNull;
 
@@ -16,25 +13,34 @@ import java.time.LocalDate;
 @Setter
 @Getter
 @Entity(name = "operations")
-public class Transaction {
+public class TransactionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
     @NonNull
+    @Column(name = "date")
     private LocalDate date;
 
     @NonNull
+    @Enumerated(value = EnumType.ORDINAL)
+    @Column(name="operation")
     private OPERATION operation;
 
+    @Enumerated(value = EnumType.ORDINAL)
+    @Column(name = "category")
     private CATEGORY category;
 
     @NonNull
+    @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name = "description")
     private String description;
 
     @NonNull
+    @Column(name = "user_id")
     private Long userId;
 }

@@ -1,6 +1,6 @@
 package com.example.budgettracker.controllers;
 
-import com.example.budgettracker.entities.User;
+import com.example.budgettracker.entities.UserEntity;
 import com.example.budgettracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,21 +17,22 @@ public class AuthApi {
 
     @GetMapping("/auth/register")
     public String register(Model model){
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserEntity());
         return "register-page";
     }
 
     @GetMapping("/auth/register-error")
     public String registerError(Model model){
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserEntity());
         model.addAttribute("registerError", true);
         return "register-page";
     }
 
     @PostMapping("/auth/register")
-    public String register(User user){
+    public String register(UserEntity user){
         log.info("User: [{}]", user);
         boolean isSaved = userService.saveUser(user);
+
         if (isSaved){
             return "redirect:/auth/login";
         }else{

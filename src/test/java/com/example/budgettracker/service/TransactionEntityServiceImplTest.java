@@ -1,6 +1,6 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.Transaction;
+import com.example.budgettracker.entities.TransactionEntity;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
 import com.example.budgettracker.repositories.TransactionRepo;
@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionServiceImplTest {
+class TransactionEntityServiceImplTest {
 
     @InjectMocks
     private TransactionServiceImpl transactionService;
@@ -29,12 +29,14 @@ class TransactionServiceImplTest {
     @Test
     void shouldSaveTransactionCorrectly() {
         //given
-        var transaction1 = new Transaction();
-        var transaction2 = new Transaction();
-        var transaction3 = new Transaction();
+        var transaction1 = new TransactionEntity();
+        var transaction2 = new TransactionEntity();
+        var transaction3 = new TransactionEntity();
+
         transaction1.setOperation(OPERATION.INCOME);
         transaction2.setOperation(OPERATION.COST);
         transaction3.setOperation(OPERATION.COST);
+
         transaction1.setCategory(null);
         transaction2.setCategory(CATEGORY.FOOD);
         transaction3.setCategory(CATEGORY.ENTERTAINMENT);
@@ -66,7 +68,7 @@ class TransactionServiceImplTest {
     @DisplayName("Should fail when INCOME & CATEGORY != null ")
     void shouldFailSaveTransaction1() {
         //given
-        var transaction1 = new Transaction();
+        var transaction1 = new TransactionEntity();
         transaction1.setOperation(OPERATION.INCOME);
         transaction1.setCategory(CATEGORY.OTHER);
 
@@ -85,7 +87,7 @@ class TransactionServiceImplTest {
     @DisplayName("Should fail when COST & CATEGORY == null ")
     void shouldFailSaveTransaction2() {
         //given
-        var transaction1 = new Transaction();
+        var transaction1 = new TransactionEntity();
         transaction1.setOperation(OPERATION.COST);
         transaction1.setCategory(null);
 
@@ -107,16 +109,19 @@ class TransactionServiceImplTest {
         Long id2 = 4L;
         Long id3 = 3L;
         Long id4 = 11L;
-        Transaction transaction1 = new Transaction();
-        Transaction transaction2 = new Transaction();
-        Transaction transaction3 = new Transaction();
-        transaction1.setId(id1);
-        transaction2.setId(id2);
-        transaction3.setId(id3);
-        var expected1 = List.of(transaction1);
-        var expected2 = List.of(transaction2);
-        var expected3 = List.of(transaction3);
-        List<Transaction> expected4 = Collections.emptyList();
+
+        TransactionEntity transactionEntity1 = new TransactionEntity();
+        TransactionEntity transactionEntity2 = new TransactionEntity();
+        TransactionEntity transactionEntity3 = new TransactionEntity();
+
+        transactionEntity1.setId(id1);
+        transactionEntity2.setId(id2);
+        transactionEntity3.setId(id3);
+
+        var expected1 = List.of(transactionEntity1);
+        var expected2 = List.of(transactionEntity2);
+        var expected3 = List.of(transactionEntity3);
+        List<TransactionEntity> expected4 = Collections.emptyList();
 
         BDDMockito.given(transactionRepo.findByUserId(id1)).willReturn(expected1);
         BDDMockito.given(transactionRepo.findByUserId(id2)).willReturn(expected2);
