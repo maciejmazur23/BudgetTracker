@@ -3,11 +3,12 @@ body {
 }
 #header {
     background-color:black;
-    color: wheat;
+    color: goldenrod;
     font-weight: bolder;
     padding: 1%;
     font-size: 40px;
     opacity: 85%;
+    font-family: "Fira Code Light", serif;
 }
 #menu-link {
     font-size: 20px;
@@ -23,12 +24,6 @@ body {
     color: white;
     text-decoration: none;
 }
-.choice {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1%;
-}
-
 .row {
     border: 1px solid black;
     margin-top: 1%;
@@ -42,21 +37,6 @@ body {
 
 #balance {
     height: 500px;
-}
-.add-panel {
-    padding: 10px;
-    border: 3px solid black;
-    border-radius: 10px;
-    margin-top: 5%;
-    margin-bottom: 5%;
-}
-#send {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-#transactions {
-    margin-bottom: 5%;
 }
 
 h1 {
@@ -77,4 +57,13 @@ h1 {
 
 .form-group {
     width: 300px;
+}
+.d-inline{
+    width: 25%;
+    text-align: center;
+}
+.navbar-nav.mr-auto{
+    width: 100%;
+    font-size: 20px;
+    margin-top: 6.5%;
 }

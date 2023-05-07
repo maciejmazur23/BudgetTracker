@@ -19,6 +19,30 @@
     </div>
     <label style="margin-left: 1%;">Summary</label>
 </div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <ul class="navbar-nav mr-auto">
+        <div class="d-inline">
+            <li class="nav-item">
+                <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item">
+                <a class="nav-link" href="/user/transactions">Transactions</a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item active">
+                <a class="nav-link" href="/user/summary" role="button">Summary</a>
+            </li>
+        </div>
+        <div class="d-inline" style="border-left: 1px solid white;">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">Logout</a>
+            </li>
+        </div>
+    </ul>
+</nav>
 <div id="container">
     <div class="choice">
         <form id="myForm" th:action="@{'/user/summary'}" th:object="${chosenYear}" method="get">
@@ -93,7 +117,7 @@
             <table class="table table-sm table-striped table-bordered">
                 <thead>
                 <tr>
-                    <th>COST</th>
+                    <th>CATEGORY</th>
                     <th>EXPENSES</th>
                 </tr>
                 </thead>

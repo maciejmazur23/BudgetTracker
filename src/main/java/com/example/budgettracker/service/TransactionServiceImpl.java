@@ -34,8 +34,7 @@ public class TransactionServiceImpl implements TransactionService{
         try{
             return transactionRepo.findByUserId(id);
         }catch (Exception e){
-            throw new RuntimeException(e.getMessage());
-//            throw new RuntimeException("Could not find Transaction by user id!");
+            throw new RuntimeException("Could not find transaction by user id!");
         }
     }
 
