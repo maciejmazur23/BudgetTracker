@@ -1,8 +1,10 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
+import com.example.budgettracker.service.impl.SummaryCreatorImpl;
+import com.example.budgettracker.service.impl.SummaryServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -57,6 +60,21 @@ class SummaryServiceImplTest {
             Assertions.assertEquals(expectedMonths.get(i), resultMonths.get(i));
         }
     }
+
+    @Test
+    @DisplayName("Check total balance correctness")
+    void getTotalBalance(){
+        // given
+        Summaries someSummaries = summaryServiceImplDate.getSomeSummaries();
+        BigDecimal expected = new BigDecimal("1.10");
+
+        // when
+        BigDecimal result = summaryService.getTotalBalance(someSummaries.yearSummaries());
+
+        //then
+        Assertions.assertEquals(expected, result);
+    }
+
 
     @Test
     @DisplayName("Check if List<Transaction> size = 0")

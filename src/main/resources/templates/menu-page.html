@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml"
       lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,12 +8,17 @@
     <link th:href="@{/css/custom.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/menu.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script th:src="@{/js/custom.js}"></script>
     <title>Budget Tracker</title>
 </head>
 <body>
 <div id="header" class="fixed-top">
     <div id="menu-link" class="d-inline">
-        <a href="/user" class="link">Budget Tracker</a>
+        <a href="/user" class="link">
+            <i class="bi bi-book-half" style="margin-right: 4px"></i>Budget Tracker
+        </a>
     </div>
     <label style="margin-left: 1%;">Welcome</label>
 </div>
@@ -21,27 +27,100 @@
         <ul class="navbar-nav mr-auto navbar-nav-scroll">
             <div class="d-inline">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/user">
+                        <i class="bi bi-house-door-fill" style="margin-right: 1px"></i>
+                        Home<span class="sr-only">(current)</span>
+                    </a>
                 </li>
             </div>
             <div class="d-inline" style="border-left: 1px solid white;">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/transactions">Transactions</a>
+                    <a class="nav-link" href="/user/transactions">
+                        <i class="bi bi-list" style="margin-right: 5px"></i>Transactions
+                    </a>
                 </li>
             </div>
             <div class="d-inline" style="border-left: 1px solid white;">
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/summary" role="button">Summary</a>
+                    <a class="nav-link" href="/user/summary" role="button">
+                        <i class="bi bi-bar-chart-fill" style="margin-right: 5px"></i>Summary
+                    </a>
                 </li>
             </div>
             <div class="d-inline" style="border-left: 1px solid white;">
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" href="/logout">
+                        Logout
+                        <i class="bi bi-box-arrow-right" style="margin-left: 5px"></i>
+                    </a>
                 </li>
             </div>
         </ul>
     </div>
 </nav>
-<div id="container" class="h-100"></div>
+<div id="container">
+    <div id="add-panel">
+        <label style="margin-left: 2%;font-size:30px;font-family: Impact,fantasy">Add transaction</label>
+        <form th:action="@{/user/add}" th:object="${newTransaction}" method="post">
+            <div class="form-row">
+                <div class="col">
+                    <label>Date</label>
+                    <input class="form-control" type="date" id="start" name="trip-start"
+                           min="2020-01-01" max="2025-12-31"
+                           th:field="*{date}"
+                           required
+                    />
+                </div>
+                <div class="col">
+                    <label>Operation</label>
+                    <select class="form-control custom-select" id="transactionList" th:field="*{operation}"
+                            onchange="makeDisable()" required>
+                        <option selected disabled value="">operation</option>
+                        <option value="INCOME">INCOME</option>
+                        <option value="COST">COST</option>
+                    </select>
+                    <div class="invalid-feedback">Example invalid custom select feedback</div>
+                </div>
+                <div class="col">
+                    <label>Category</label>
+                    <select class="form-control custom-select" id="categoryList" th:field="*{category}" disabled>
+                        <option selected disabled value="">category</option>
+                        <option value="SPORT">SPORT</option>
+                        <option value="FOOD">FOOD</option>
+                        <option value="ENTERTAINMENT">ENTERTAINMENT</option>
+                        <option value="SHOPPING">SHOPPING</option>
+                        <option value="TRANSPORT">TRANSPORT</option>
+                        <option value="HOUSE">HOUSE</option>
+                        <option value="OTHER">OTHER</option>
+                    </select>
+                    <div class="invalid-feedback">Example invalid custom select feedback</div>
+                </div>
+                <div class="col">
+                    <label>Price</label>
+                    <input class="form-control" id="price" type="number" placeholder="4.99" step="0.01" min="0"
+                           max="1000000.00"
+                           th:field="*{price}"
+                           required
+                    />
+                </div>
+                <div class="col">
+                    <label>Description</label>
+                    <input class="form-control" id="description"
+                           type="text" placeholder="description"
+                           th:field="*{description}" required>
+                </div>
+                <div id="send" class="col">
+                    <input id="save" class="btn btn-warning" type="submit" value="Add"/>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="founds">
+        <h4 style="margin-left: 5%; padding: 4px">
+            <i class="bi bi-cash-coin" style="margin-right: 10px"></i>Founds
+        </h4>
+        <p style="text-align: right; margin-right: 10%" th:text="${balance}"></p>
+    </div>
+</div>
 </body>
 </html>

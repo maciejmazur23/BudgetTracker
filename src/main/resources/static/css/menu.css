@@ -1,4 +1,27 @@
 #container {
-    width: 100%;
+    background-color: white;
+    margin: 3% 5% 5% 5%;
+}
+#add-panel {
+    padding: 10px;
+    border: 2px solid black;
+    margin: 4% 2% 5% 2%;
+    background-color: white;
+}
+#send {
+    margin-top: 30px;
     display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#founds{
+    width: 25%;
+    background-color: green;
+    font-size: 40px;
+    color: white;
+    border: 3px solid black;
+    border-radius: 3px;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-family: Impact, serif;
 }

@@ -27,9 +27,14 @@ The following dependencies are downloaded with spring boot:
 * spring-boot-starter-data-jpa,
 * spring-boot-starter-thymeleaf, 
 * spring-boot-starter-web, 
-* lombok, 
-* logback.
+* lombok,
 
 ## TODO
 * Option to export summaries to excel
 * Option to add your own categories by user
+* Ability to add a list of transactions by uploading a file
+* Change the appearance of the transaction list
+* Add user settings
+* Add OAuth2
+* Possible to delete all transactions in one click
+* Add filter to transactions
