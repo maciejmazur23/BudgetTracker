@@ -1,9 +1,10 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
-import com.example.budgettracker.repositories.TransactionRepo;
+import com.example.budgettracker.database.repositories.TransactionRepo;
+import com.example.budgettracker.service.impl.TransactionServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

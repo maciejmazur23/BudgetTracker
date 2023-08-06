@@ -1,4 +1,4 @@
-package com.example.budgettracker.entities;
+package com.example.budgettracker.database.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

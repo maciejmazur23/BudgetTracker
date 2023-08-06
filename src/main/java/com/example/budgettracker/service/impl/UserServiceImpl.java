@@ -1,7 +1,8 @@
-package com.example.budgettracker.service;
+package com.example.budgettracker.service.impl;
 
-import com.example.budgettracker.entities.UserEntity;
-import com.example.budgettracker.repositories.UserRepo;
+import com.example.budgettracker.database.entities.UserEntity;
+import com.example.budgettracker.database.repositories.UserRepo;
+import com.example.budgettracker.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

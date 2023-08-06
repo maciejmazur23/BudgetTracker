@@ -8,6 +8,8 @@
     <link th:href="@{/css/custom.css}" rel="stylesheet">
     <link th:href="@{/css/summary.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script th:src="@{/js/custom.js}"></script>
     <title>Summary</title>
@@ -15,33 +17,47 @@
 <body>
 <div id="header" class="fixed-top">
     <div id="menu-link" class="d-inline">
-        <a href="/user" class="link">Budget Tracker</a>
+        <a href="/user" class="link">
+            <i class="bi bi-book-half" style="margin-right: 4px"></i>Budget Tracker
+        </a>
     </div>
     <label style="margin-left: 1%;">Summary</label>
 </div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <ul class="navbar-nav mr-auto">
-        <div class="d-inline">
-            <li class="nav-item">
-                <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item">
-                <a class="nav-link" href="/user/transactions">Transactions</a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item active">
-                <a class="nav-link" href="/user/summary" role="button">Summary</a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-            </li>
-        </div>
-    </ul>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav mr-auto navbar-nav-scroll">
+            <div class="d-inline">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user">
+                        <i class="bi bi-house-door-fill" style="margin-right: 1px"></i>
+                        Home<span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/transactions">
+                        <i class="bi bi-list" style="margin-right: 5px"></i>Transactions
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user/summary" role="button">
+                        <i class="bi bi-bar-chart-fill" style="margin-right: 5px"></i>Summary
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        Logout
+                        <i class="bi bi-box-arrow-right" style="margin-left: 5px"></i>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </div>
 </nav>
 <div id="container">
     <div class="choice">

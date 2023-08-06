@@ -3,21 +3,39 @@ body{
 }
 #container {
     width: 80%;
+    margin-top:4%;
     margin-left: 10%;
-    background-color: white;
-}
-.add-panel {
-    padding: 10px;
-    border: 2px solid black;
-    margin: 5% 5% 5%;
-    background-color: white;
 }
 #transactions {
     margin-bottom: 5%;
+    background-color: white;
 }
-#send {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#list-filter{
+    margin-bottom: 2%;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+#filter-panel{
+    margin: 2%;
+}
+#filter-title{
+    background-color: black;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    text-align: center;
+    padding: 0.5%;
+    color: white;
+    font-size: 20px;
+    font-family: "Fira Code Light", serif;
+}
+.col{
+    border-right: 1px solid black;
+    margin-right: 2%;
+}
+.filter-col{
+    margin-right: 7%;
+}
+.sub{
+    margin-left: 15%;
 }

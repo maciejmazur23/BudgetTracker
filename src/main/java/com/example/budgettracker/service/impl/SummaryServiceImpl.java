@@ -1,14 +1,17 @@
-package com.example.budgettracker.service;
+package com.example.budgettracker.service.impl;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.enums.CATEGORY;
+import com.example.budgettracker.service.interfaces.SummaryCreator;
+import com.example.budgettracker.service.interfaces.SummaryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,17 @@ public class SummaryServiceImpl implements SummaryService {
             log.info("MonthSummaries: [{}]", monthSummaries);
         }
         return new Summaries(monthSummaries, yearSummaries);
+    }
+
+    @Override
+    public BigDecimal getTotalBalance(List<Summary> yearSummaries) {
+        Summary thisYearSummary = yearSummaries.stream()
+                .filter(summary -> summary.getYear() == LocalDate.now().getYear())
+                .findFirst()
+                .orElseThrow();
+
+        return thisYearSummary.getPreviousBalance()
+                .add(thisYearSummary.getCurrentBalance());
     }
 
     @Override

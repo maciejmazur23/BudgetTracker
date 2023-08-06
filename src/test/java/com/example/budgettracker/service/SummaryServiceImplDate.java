@@ -1,6 +1,6 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.enums.CATEGORY;

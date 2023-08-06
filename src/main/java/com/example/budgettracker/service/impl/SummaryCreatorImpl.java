@@ -1,9 +1,10 @@
-package com.example.budgettracker.service;
+package com.example.budgettracker.service.impl;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
+import com.example.budgettracker.service.interfaces.SummaryCreator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

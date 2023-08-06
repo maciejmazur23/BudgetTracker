@@ -1,6 +1,6 @@
-package com.example.budgettracker.service;
+package com.example.budgettracker.service.interfaces;
 
-import com.example.budgettracker.entities.UserEntity;
+import com.example.budgettracker.database.entities.UserEntity;
 
 public interface UserService {
 

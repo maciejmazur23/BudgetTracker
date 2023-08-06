@@ -1,7 +1,7 @@
 package com.example.budgettracker.controllers;
 
-import com.example.budgettracker.entities.UserEntity;
-import com.example.budgettracker.service.UserService;
+import com.example.budgettracker.database.entities.UserEntity;
+import com.example.budgettracker.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
