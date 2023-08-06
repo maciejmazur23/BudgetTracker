@@ -1,13 +1,13 @@
 package com.example.budgettracker.controllers;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summaries;
 import com.example.budgettracker.model.Summary;
 import com.example.budgettracker.model.Year;
 import com.example.budgettracker.model.enums.CATEGORY;
-import com.example.budgettracker.service.SummaryService;
-import com.example.budgettracker.service.TransactionService;
-import com.example.budgettracker.service.UserService;
+import com.example.budgettracker.service.interfaces.SummaryService;
+import com.example.budgettracker.service.interfaces.TransactionService;
+import com.example.budgettracker.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

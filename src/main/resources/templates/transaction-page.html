@@ -8,97 +8,112 @@
     <link th:href="@{/css/custom.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/transactions.css}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <script th:src="@{/js/custom.js}"></script>
     <title>Transactions</title>
 </head>
 <body>
 <div id="header" class="fixed-top">
     <div id="menu-link" class="d-inline">
-        <a href="/user" class="link">Budget Tracker</a>
+        <a href="/user" class="link">
+            <i class="bi bi-book-half" style="margin-right: 4px"></i>Budget Tracker
+        </a>
     </div>
     <label style="margin-left: 1%;">Transactions</label>
 </div>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <ul class="navbar-nav mr-auto">
-        <div class="d-inline">
-            <li class="nav-item">
-                <a class="nav-link" href="/user">Home <span class="sr-only">(current)</span></a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item active">
-                <a class="nav-link" href="/user/transactions">Transactions</a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item">
-                <a class="nav-link" href="/user/summary" role="button">Summary</a>
-            </li>
-        </div>
-        <div class="d-inline" style="border-left: 1px solid white;">
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-            </li>
-        </div>
-    </ul>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav mr-auto navbar-nav-scroll">
+            <div class="d-inline">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user">
+                        <i class="bi bi-house-door-fill" style="margin-right: 1px"></i>
+                        Home<span class="sr-only">(current)</span>
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/user/transactions">
+                        <i class="bi bi-list" style="margin-right: 5px"></i>Transactions
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/summary" role="button">
+                        <i class="bi bi-bar-chart-fill" style="margin-right: 5px"></i>Summary
+                    </a>
+                </li>
+            </div>
+            <div class="d-inline" style="border-left: 1px solid white;">
+                <li class="nav-item">
+                    <a class="nav-link" href="/logout">
+                        Logout
+                        <i class="bi bi-box-arrow-right" style="margin-left: 5px"></i>
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </div>
 </nav>
-<div class="add-panel">
-    <label style="margin-left: 2%;font-size:30px;font-family: Impact,fantasy">Add transaction</label>
-    <form th:action="@{/user/add-transaction}" th:object="${newTransaction}" method="post">
-        <div class="form-row">
-            <div class="col">
-                <label>Date</label>
-                <input class="form-control" type="date" id="start" name="trip-start"
-                       min="2020-01-01" max="2025-12-31"
-                       th:field="*{date}"
-                       required
-                />
-            </div>
-            <div class="col">
-                <label>Operation</label>
-                <select class="form-control custom-select" id="transactionList" th:field="*{operation}"
-                        onchange="makeDisable()" required>
-                    <option selected disabled value="">operation</option>
-                    <option value="INCOME">INCOME</option>
-                    <option value="COST">COST</option>
-                </select>
-                <div class="invalid-feedback">Example invalid custom select feedback</div>
-            </div>
-            <div class="col">
-                <label>Category</label>
-                <select class="form-control custom-select" id="categoryList" th:field="*{category}" disabled>
-                    <option selected disabled value="">category</option>
-                    <option value="SPORT">SPORT</option>
-                    <option value="FOOD">FOOD</option>
-                    <option value="ENTERTAINMENT">ENTERTAINMENT</option>
-                    <option value="SHOPPING">SHOPPING</option>
-                    <option value="TRANSPORT">TRANSPORT</option>
-                    <option value="HOUSE">HOUSE</option>
-                    <option value="OTHER">OTHER</option>
-                </select>
-                <div class="invalid-feedback">Example invalid custom select feedback</div>
-            </div>
-            <div class="col">
-                <label>Price</label>
-                <input class="form-control" id="price" type="number" placeholder="4.99" step="0.01" min="0"
-                       max="1000000.00"
-                       th:field="*{price}"
-                       required
-                />
-            </div>
-            <div class="col">
-                <label>Description</label>
-                <input class="form-control" id="description"
-                       type="text" placeholder="description"
-                       th:field="*{description}" required>
-            </div>
-            <div id="send" class="col">
-                <input id="save" class="btn btn-warning" type="submit" value="Add"/>
-            </div>
-        </div>
-    </form>
-</div>
 <div id="container">
+    <div id="list-filter">
+        <div id="filter-title">Filter</div>
+        <div id="filter-panel">
+            <form th:action="@{/user/transactions}" th:object="${filterObject}" method="post">
+                <div class="form-row">
+                    <div class="filter-col">
+                        From
+                            <input id="from-date" class="form-control-sm" type="date"
+                                   min="2020-01-01" max="2025-12-31"
+                                   th:field="*{dateFrom}"/>
+                        to
+                        <input id="date-to" class="form-control-sm" type="date"
+                               min="2020-01-01" max="2025-12-31"
+                               th:field="*{dateTo}"/>
+                    </div>
+                    <div class="filter-col">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" th:field="*{incomes}" checked>
+                            <label class="form-check-label" for="flexCheckDefault">Incomes</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" th:field="*{costs}" checked>
+                            <label class="form-check-label" for="flexCheckChecked">Costs</label>
+                        </div>
+                    </div>
+                    <div class="filter-col">
+                        <div class="form-group">
+                            <select class="form-control-sm selectpicker" multiple th:field="*{categories}">
+                                <option value="SPORT">Sport</option>
+                                <option value="FOOD">Food</option>
+                                <option value="ENTERTAINMENT">Entertainment</option>
+                                <option value="SHOPPING">Shopping</option>
+                                <option value="TRANSPORT">Transport</option>
+                                <option value="HOUSE">House</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                        </div>
+                    </div>
+<!--                    <div class="col">-->
+                        <!--                        <label for="priceFrom" class="form-label">From</label>-->
+                        <!--                        <input type="range" class="form-control-range" id="priceFrom" min="0" max="1000"-->
+                        <!--                               value="[0, 1000]" th:field="*{priceFrom}">-->
+                        <!--                        <label for="priceFrom" class="form-label">To</label>-->
+                        <!--                        <input type="range" class="form-control-range" id="priceFrom" min="0" max="1000"-->
+                        <!--                               value="[0, 1000]" th:field="*{priceFrom}">-->
+<!--                    </div>-->
+                    <div class="sub">
+                        <input id="filter" class="btn btn-warning" type="submit" value="Apply"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
     <div id="transactions">
         <table class="table table-hover">
             <thead>
@@ -134,5 +149,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
 </body>
 </html>

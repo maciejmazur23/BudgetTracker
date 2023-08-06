@@ -1,7 +1,7 @@
 package com.example.budgettracker.configuration;
 
-import com.example.budgettracker.entities.UserEntity;
-import com.example.budgettracker.repositories.UserRepo;
+import com.example.budgettracker.database.entities.UserEntity;
+import com.example.budgettracker.database.repositories.UserRepo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

@@ -1,6 +1,6 @@
-package com.example.budgettracker.service;
+package com.example.budgettracker.service.interfaces;
 
-import com.example.budgettracker.entities.TransactionEntity;
+import com.example.budgettracker.database.entities.TransactionEntity;
 import com.example.budgettracker.model.Summary;
 
 import java.util.List;

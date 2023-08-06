@@ -1,9 +1,11 @@
-package com.example.budgettracker.entities;
+package com.example.budgettracker.database.entities;
 
 import com.example.budgettracker.model.enums.CATEGORY;
 import com.example.budgettracker.model.enums.OPERATION;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;

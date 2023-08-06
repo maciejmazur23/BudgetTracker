@@ -1,7 +1,8 @@
 package com.example.budgettracker.service;
 
-import com.example.budgettracker.entities.UserEntity;
-import com.example.budgettracker.repositories.UserRepo;
+import com.example.budgettracker.database.entities.UserEntity;
+import com.example.budgettracker.database.repositories.UserRepo;
+import com.example.budgettracker.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
