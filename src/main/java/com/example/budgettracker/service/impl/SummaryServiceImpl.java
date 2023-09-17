@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -41,10 +38,32 @@ public class SummaryServiceImpl implements SummaryService {
         Summary thisYearSummary = yearSummaries.stream()
                 .filter(summary -> summary.getYear() == LocalDate.now().getYear())
                 .findFirst()
-                .orElseThrow();
+                .orElse(newSummary());
 
         return thisYearSummary.getPreviousBalance()
                 .add(thisYearSummary.getCurrentBalance());
+    }
+
+    private Summary newSummary() {
+        return Summary.builder()
+                .year(LocalDate.now().getYear())
+                .month(LocalDate.now().getMonth())
+                .previousBalance(BigDecimal.ZERO)
+                .incomes(BigDecimal.ZERO)
+                .costs(BigDecimal.ZERO)
+                .currentBalance(BigDecimal.ZERO)
+                .categoryCosts(generateNewCategoryCost())
+                .build();
+    }
+
+    private Map<CATEGORY, BigDecimal> generateNewCategoryCost() {
+        Map<CATEGORY, BigDecimal> categoryMap = new HashMap<>();
+
+        Arrays.stream(CATEGORY.values()).forEach(category ->
+                categoryMap.put(category, BigDecimal.ZERO)
+        );
+
+        return categoryMap;
     }
 
     @Override

@@ -60,8 +60,7 @@ public class TransactionServiceImpl implements TransactionService {
                     .filter(transactionEntity -> transactionEntity.getPrice().compareTo(filter.getPriceTo()) < 0)
                     .filter(transactionEntity -> operationFilter(filter, transactionEntity))
                     .toList();
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -88,6 +87,11 @@ public class TransactionServiceImpl implements TransactionService {
         return transactions.stream()
                 .sorted(comparator)
                 .toList();
+    }
+
+    @Override
+    public void deleteAll() {
+        transactionRepo.deleteAll();
     }
 
     private boolean operationFilter(TransactionFilter filter, TransactionEntity transactionEntity) {

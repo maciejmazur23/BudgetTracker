@@ -36,4 +36,3 @@ The following dependencies are downloaded with spring boot:
 * Change the appearance of the transaction list
 * Add user settings
 * Add OAuth2
-* Possible to delete all transactions in one click
