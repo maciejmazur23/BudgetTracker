@@ -6,7 +6,7 @@ Budget Tracker is an application to record and analyze your expenses. The applic
 income and expenses. The summaries are divided into monthly or yearly with the expenses listed by category.
 ![Register](img/register.png)
 ![Login](img/login.png)
-![Menu](img/menu.png)
+![Home](img/home.png)
 ![Transactions](img/transactions.png)
 ![Summary](img/summary1.png)
 ![Summary](img/summary2.png)
@@ -37,4 +37,3 @@ The following dependencies are downloaded with spring boot:
 * Add user settings
 * Add OAuth2
 * Possible to delete all transactions in one click
-* Add filter to transactions
