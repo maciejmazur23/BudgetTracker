@@ -99,14 +99,6 @@
                             </select>
                         </div>
                     </div>
-<!--                    <div class="col">-->
-                        <!--                        <label for="priceFrom" class="form-label">From</label>-->
-                        <!--                        <input type="range" class="form-control-range" id="priceFrom" min="0" max="1000"-->
-                        <!--                               value="[0, 1000]" th:field="*{priceFrom}">-->
-                        <!--                        <label for="priceFrom" class="form-label">To</label>-->
-                        <!--                        <input type="range" class="form-control-range" id="priceFrom" min="0" max="1000"-->
-                        <!--                               value="[0, 1000]" th:field="*{priceFrom}">-->
-<!--                    </div>-->
                     <div class="sub">
                         <input id="filter" class="btn btn-warning" type="submit" value="Apply"/>
                     </div>
@@ -123,6 +115,9 @@
                 <th scope="col">Category</th>
                 <th scope="col">Price</th>
                 <th scope="col">Description</th>
+                <td>
+                    <a th:href="@{/user/delete-transaction/all}" class="btn btn-danger">Delete-all</a>
+                </td>
             </tr>
             </thead>
             <tbody>

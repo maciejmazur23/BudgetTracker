@@ -20,4 +20,6 @@ public interface TransactionService {
     TransactionFilter getFilter(Optional<TransactionFilter> optionalFilter, Long id);
 
     List<TransactionEntity> sortTransactions(Long id, List<TransactionEntity> transactions, Comparator<TransactionEntity> reversed);
+
+    void deleteAll();
 }

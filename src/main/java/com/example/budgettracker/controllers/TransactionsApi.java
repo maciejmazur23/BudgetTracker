@@ -24,9 +24,18 @@ public class TransactionsApi {
 
     @GetMapping("/user/delete-transaction/{id}")
     public String deleteTransaction(@PathVariable("id") Long id) {
-        log.info("Id: [{}]", id);
+        log.info("DELETE ID: [{}]", id);
 
         transactionService.deleteById(id);
+
+        return "redirect:/user/transactions";
+    }
+
+    @GetMapping("/user/delete-transaction/all")
+    public String deleteTransactions() {
+        log.info("DELETE ALL");
+
+        transactionService.deleteAll();
 
         return "redirect:/user/transactions";
     }
